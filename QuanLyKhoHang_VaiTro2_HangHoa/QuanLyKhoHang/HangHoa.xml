@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DanhSachHangHoa>
+    <HangHoa>
+        <id>1</id>
+        <maHang>HH001</maHang>
+        <tenHang>Nước ngọt Coca-Cola lon 330ml</tenHang>
+        <nhomHang>Đồ uống</nhomHang>
+        <donViTinh>lon</donViTinh>
+        <donGia>10000</donGia>
+        <hanSuDung>2027-03-15T00:00:00+07:00</hanSuDung>
+    </HangHoa>
+    <HangHoa>
+        <id>2</id>
+        <maHang>HH002</maHang>
+        <tenHang>Mì Hảo Hảo tôm chua cay</tenHang>
+        <nhomHang>Mì - Miến - Cháo</nhomHang>
+        <donViTinh>gói</donViTinh>
+        <donGia>4500</donGia>
+        <hanSuDung>2027-01-20T00:00:00+07:00</hanSuDung>
+    </HangHoa>
+    <HangHoa>
+        <id>3</id>
+        <maHang>HH003</maHang>
+        <tenHang>Dầu ăn Simply 1 lít</tenHang>
+        <nhomHang>Gia vị</nhomHang>
+        <donViTinh>chai</donViTinh>
+        <donGia>62000</donGia>
+        <hanSuDung>2027-08-30T00:00:00+07:00</hanSuDung>
+    </HangHoa>
+    <HangHoa>
+        <id>4</id>
+        <maHang>HH004</maHang>
+        <tenHang>Sữa tươi Vinamilk 1 lít</tenHang>
+        <nhomHang>Sữa</nhomHang>
+        <donViTinh>hộp</donViTinh>
+        <donGia>34500</donGia>
+        <hanSuDung>2026-11-01T00:00:00+07:00</hanSuDung>
+    </HangHoa>
+</DanhSachHangHoa>

@@ -29,10 +29,11 @@ public class MainView extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel3 = new javax.swing.JLabel();
-        btnChooseSpecialPerson = new javax.swing.JButton();
+        btnThongKe = new javax.swing.JButton();
         btnChooseResidents = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
+        btnNhaCungCap = new javax.swing.JButton();
 
         jLabel3.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -41,17 +42,17 @@ public class MainView extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setSize(new java.awt.Dimension(960, 679));
 
-        btnChooseSpecialPerson.setBackground(new java.awt.Color(0, 0, 102));
-        btnChooseSpecialPerson.setFont(new java.awt.Font("Times New Roman", 0, 36)); // NOI18N
-        btnChooseSpecialPerson.setForeground(new java.awt.Color(255, 255, 255));
-        btnChooseSpecialPerson.setText("Quản Lý Nhập/Xuất");
-        btnChooseSpecialPerson.setToolTipText("");
-        btnChooseSpecialPerson.setBorder(null);
-        btnChooseSpecialPerson.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnChooseSpecialPerson.setOpaque(true);
-        btnChooseSpecialPerson.addActionListener(new java.awt.event.ActionListener() {
+        btnThongKe.setBackground(new java.awt.Color(0, 0, 102));
+        btnThongKe.setFont(new java.awt.Font("Times New Roman", 0, 36)); // NOI18N
+        btnThongKe.setForeground(new java.awt.Color(255, 255, 255));
+        btnThongKe.setText("Tìm kiếm & Thống kê");
+        btnThongKe.setToolTipText("");
+        btnThongKe.setBorder(null);
+        btnThongKe.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnThongKe.setOpaque(true);
+        btnThongKe.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnChooseSpecialPersonActionPerformed(evt);
+                btnThongKeActionPerformed(evt);
             }
         });
 
@@ -78,6 +79,20 @@ public class MainView extends javax.swing.JFrame {
         jLabel9.setIcon(new ImageIcon("src/main/java/com/mycompany/quanlydoituongdacbiet/view/Lovepik_com-500330964-blue-blazed-background.jpg"));
         jLabel9.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
+        btnNhaCungCap.setBackground(new java.awt.Color(0, 0, 102));
+        btnNhaCungCap.setFont(new java.awt.Font("Times New Roman", 0, 36)); // NOI18N
+        btnNhaCungCap.setForeground(new java.awt.Color(255, 255, 255));
+        btnNhaCungCap.setText("Quản Lý Nhà cung cấp");
+        btnNhaCungCap.setToolTipText("");
+        btnNhaCungCap.setBorder(null);
+        btnNhaCungCap.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnNhaCungCap.setOpaque(true);
+        btnNhaCungCap.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNhaCungCapActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -86,15 +101,20 @@ public class MainView extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(110, 110, 110)
-                        .addComponent(btnChooseResidents, javax.swing.GroupLayout.PREFERRED_SIZE, 387, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(55, 55, 55)
-                        .addComponent(btnChooseSpecialPerson, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnChooseResidents, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
+                            .addComponent(btnThongKe, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(438, 438, 438)
                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 1056, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(235, 235, 235)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 581, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(562, 562, 562)
+                    .addComponent(btnNhaCungCap, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(1058, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -104,25 +124,34 @@ public class MainView extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(99, 99, 99)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnChooseResidents, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnChooseSpecialPerson, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnChooseResidents, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(38, 38, 38)
+                        .addComponent(btnThongKe, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 642, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(320, 320, 320)
+                    .addComponent(btnNhaCungCap, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(387, Short.MAX_VALUE)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnChooseSpecialPersonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChooseSpecialPersonActionPerformed
+    private void btnThongKeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThongKeActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnChooseSpecialPersonActionPerformed
+    }//GEN-LAST:event_btnThongKeActionPerformed
 
     private void btnChooseResidentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChooseResidentsActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnChooseResidentsActionPerformed
+
+    private void btnNhaCungCapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNhaCungCapActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnNhaCungCapActionPerformed
 
     /**
      * @param args the command line arguments
@@ -160,17 +189,20 @@ public class MainView extends javax.swing.JFrame {
     }
     
     public void addChooseSpecialPersonListener(ActionListener listener){
-        btnChooseSpecialPerson.addActionListener(listener);
+        btnNhaCungCap.addActionListener(listener);
     }
     
     public void addChooseResidentsListener(ActionListener listener){
         btnChooseResidents.addActionListener(listener);
     }
-    
+    public void addChooseThongKeListener(ActionListener listener) {
+        btnThongKe.addActionListener(listener);
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnChooseResidents;
-    private javax.swing.JButton btnChooseSpecialPerson;
+    private javax.swing.JButton btnNhaCungCap;
+    private javax.swing.JButton btnThongKe;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel9;
