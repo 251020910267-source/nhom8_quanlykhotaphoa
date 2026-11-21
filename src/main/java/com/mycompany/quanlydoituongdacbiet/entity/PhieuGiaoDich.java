@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
 @XmlAccessorType(XmlAccessType.FIELD)
+@XmlSeeAlso({PhieuNhap.class, PhieuXuat.class})
 public abstract class PhieuGiaoDich implements Serializable {
     private int id;
     private Date ngayGiaoDich;
