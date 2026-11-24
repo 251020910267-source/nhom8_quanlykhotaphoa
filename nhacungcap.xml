@@ -1,2 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<NhaCungCaps/>
+<NhaCungCaps>
+    <NhaCungCap>
+        <id>1</id>
+        <tenNCC>Công Ty Hữu Hạn Thành Long</tenNCC>
+        <soDienThoai>0814765298</soDienThoai>
+        <diaChi>Nguyễn Chí Thanh</diaChi>
+        <email>HHDI@gmail.com</email>
+    </NhaCungCap>
+</NhaCungCaps>

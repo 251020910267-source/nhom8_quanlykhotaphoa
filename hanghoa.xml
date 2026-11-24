@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DanhSachHangHoa>
+    <HangHoa>
+        <id>1</id>
+        <maHang>83VNHS</maHang>
+        <tenHang>Sữa Fami</tenHang>
+        <nhomHang>Đồ uống</nhomHang>
+        <donViTinh>6</donViTinh>
+        <donGia>35000</donGia>
+        <hanSuDung>20272027-05-16T00:00:00+07:00</hanSuDung>
+    </HangHoa>
+</DanhSachHangHoa>

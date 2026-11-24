@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PhieuGiaoDichs>
+    <PhieuNhap>
+        <id>1</id>
+        <ngayGiaoDich>2026-11-24T11:28:37.632+07:00</ngayGiaoDich>
+        <maHangHoa>1</maHangHoa>
+        <soLuong>99</soLuong>
+        <donGia>500000.0</donGia>
+        <tenNhaCungCap>Công Ty Hữu Hạn Thành Long</tenNhaCungCap>
+    </PhieuNhap>
+</PhieuGiaoDichs>

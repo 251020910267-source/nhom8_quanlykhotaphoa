@@ -34,6 +34,7 @@ public class MainView extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         btnNhaCungCap = new javax.swing.JButton();
+        btnPhieuGiaoDich = new javax.swing.JButton();
 
         jLabel3.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -93,6 +94,20 @@ public class MainView extends javax.swing.JFrame {
             }
         });
 
+        btnPhieuGiaoDich.setBackground(new java.awt.Color(0, 0, 102));
+        btnPhieuGiaoDich.setFont(new java.awt.Font("Times New Roman", 0, 36)); // NOI18N
+        btnPhieuGiaoDich.setForeground(new java.awt.Color(255, 255, 255));
+        btnPhieuGiaoDich.setText("Quản Lý Nhập/Xuất");
+        btnPhieuGiaoDich.setToolTipText("");
+        btnPhieuGiaoDich.setBorder(null);
+        btnPhieuGiaoDich.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnPhieuGiaoDich.setOpaque(true);
+        btnPhieuGiaoDich.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPhieuGiaoDichActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -104,17 +119,16 @@ public class MainView extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnChooseResidents, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
                             .addComponent(btnThongKe, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(438, 438, 438)
+                        .addGap(43, 43, 43)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnPhieuGiaoDich, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnNhaCungCap, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 1056, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(235, 235, 235)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 581, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(562, 562, 562)
-                    .addComponent(btnNhaCungCap, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(1058, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -124,18 +138,17 @@ public class MainView extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(99, 99, 99)
-                        .addComponent(btnChooseResidents, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnChooseResidents, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
+                            .addComponent(btnNhaCungCap, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(38, 38, 38)
-                        .addComponent(btnThongKe, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnThongKe, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnPhieuGiaoDich, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 642, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(320, 320, 320)
-                    .addComponent(btnNhaCungCap, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(387, Short.MAX_VALUE)))
+                .addContainerGap(115, Short.MAX_VALUE))
         );
 
         pack();
@@ -152,6 +165,10 @@ public class MainView extends javax.swing.JFrame {
     private void btnNhaCungCapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNhaCungCapActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnNhaCungCapActionPerformed
+
+    private void btnPhieuGiaoDichActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPhieuGiaoDichActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnPhieuGiaoDichActionPerformed
 
     /**
      * @param args the command line arguments
@@ -198,10 +215,14 @@ public class MainView extends javax.swing.JFrame {
     public void addChooseThongKeListener(ActionListener listener) {
         btnThongKe.addActionListener(listener);
     }
+    public void addChoosePhieuGiaoDichListener(ActionListener listener) {
+        btnPhieuGiaoDich.addActionListener(listener);
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnChooseResidents;
     private javax.swing.JButton btnNhaCungCap;
+    private javax.swing.JButton btnPhieuGiaoDich;
     private javax.swing.JButton btnThongKe;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

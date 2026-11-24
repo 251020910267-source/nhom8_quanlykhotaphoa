@@ -7,7 +7,7 @@ import com.mycompany.quanlydoituongdacbiet.view.ThongKeView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JFrame;
-
+import com.mycompany.quanlydoituongdacbiet.view.PhieuGiaoDichView;
 public class MainController {
     private MainView mainView;
     private HangHoaView hangHoaView;
@@ -19,6 +19,7 @@ public class MainController {
         view.addChooseResidentsListener(new ChooseHangHoaListener());
         view.addChooseSpecialPersonListener(new ChooseNhaCungCapListener());
         view.addChooseThongKeListener(new ChooseThongKeListener());
+        view.addChoosePhieuGiaoDichListener(new ChoosePhieuGiaoDichListener());
     }
 
     public void showMainView() {
@@ -52,6 +53,15 @@ public class MainController {
             thongKeView.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             ThongKeController thongKeController = new ThongKeController(thongKeView);
             thongKeController.showThongKeView();
+        }
+    }
+    class ChoosePhieuGiaoDichListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            PhieuGiaoDichView phieuView = new PhieuGiaoDichView();
+            phieuView.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            phieuView.setLocationRelativeTo(null);
+            phieuView.setVisible(true);
         }
     }
 }
