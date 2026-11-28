@@ -13,7 +13,8 @@ public class PhieuGiaoDichXML {
 
     @XmlElementRefs({
             @XmlElementRef(type = PhieuNhap.class),
-            @XmlElementRef(type = PhieuXuat.class)
+            @XmlElementRef(type = PhieuXuat.class),
+            @XmlElementRef(type = PhieuHuy.class)
     })
     private List<PhieuGiaoDich> phieuGiaoDich;
 

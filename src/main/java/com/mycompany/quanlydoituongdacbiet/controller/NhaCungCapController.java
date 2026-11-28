@@ -9,8 +9,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 public class NhaCungCapController {
-    private ManagerNhaCungCap managerNCC;
-    private NhaCungCapView nccView;
+    private final ManagerNhaCungCap managerNCC;
+    private final NhaCungCapView nccView;
 
     public NhaCungCapController(NhaCungCapView view) {
         this.nccView = view;
@@ -25,8 +25,9 @@ public class NhaCungCapController {
     }
 
     public void showNhaCungCapView() {
-        nccView.setVisible(true);
+        managerNCC.taiLai();
         nccView.showListNCC(managerNCC.getListNCC());
+        nccView.setVisible(true);
     }
 
     class AddNCCListener implements ActionListener {
@@ -52,13 +53,13 @@ public class NhaCungCapController {
             NhaCungCap ncc = nccView.getNCCInfo();
             if (ncc != null) {
                 if (!managerNCC.isNCCUnique(ncc)) {
-                    nccView.showMessage("Tên nhà cung cấp hoặc Số điện thoại bị trùng!");
+                    nccView.showMessage("Tên nhà cung cấp hoặc Số điện thoại bị trùng với đối tác khác!");
                     return;
                 }
                 managerNCC.edit(ncc);
                 nccView.showNCC(ncc);
                 nccView.showListNCC(managerNCC.getListNCC());
-                nccView.showMessage("Cập nhật thành công!");
+                nccView.showMessage("Cập nhật nhà cung cấp thành công!");
             }
         }
     }
@@ -67,13 +68,15 @@ public class NhaCungCapController {
         @Override
         public void actionPerformed(ActionEvent e) {
             NhaCungCap ncc = nccView.getNCCInfo();
-            if (ncc != null) {
-                if (nccView.showConfirm("Bạn có chắc chắn muốn xoá nhà cung cấp này?")) {
-                    managerNCC.delete(ncc);
-                    nccView.clearNCCInfo();
-                    nccView.showListNCC(managerNCC.getListNCC());
-                    nccView.showMessage("Xoá thành công!");
+            if (ncc != null && nccView.showConfirm("Bạn có chắc chắn muốn xoá nhà cung cấp '" + ncc.getTenNCC() + "'?")) {
+                String loi = managerNCC.xoaNCC(ncc);
+                if (loi != null) {
+                    nccView.showMessage(loi);
+                    return;
                 }
+                nccView.clearNCCInfo();
+                nccView.showListNCC(managerNCC.getListNCC());
+                nccView.showMessage("Xoá nhà cung cấp thành công!");
             }
         }
     }
@@ -97,7 +100,9 @@ public class NhaCungCapController {
     class ListNCCSelectionListener implements ListSelectionListener {
         @Override
         public void valueChanged(ListSelectionEvent e) {
-            nccView.fillNCCFromSelectedRow();
+            if (!e.getValueIsAdjusting()) {
+                nccView.fillNCCFromSelectedRow();
+            }
         }
     }
 }

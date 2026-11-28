@@ -8,7 +8,7 @@
     <repositories>
         <repository>
             <id>unknown-jars-temp-repo</id>
-            <name>A temporary repository created by NetBeans for libraries and jars it could not identify. Please replace the dependencies in this repository with correct ones and delete this repository.</name>
+            <name>Local project libraries</name>
             <url>file:${project.basedir}/lib</url>
         </repository>
     </repositories>
@@ -19,7 +19,6 @@
             <version>2.3.3</version>
             <type>jar</type>
         </dependency>
-
         <!-- JAXB API -->
         <dependency>
             <groupId>javax.xml.bind</groupId>
@@ -33,10 +32,9 @@
             <version>2.3.4</version>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
+            <groupId>com.toedter</groupId>
+            <artifactId>jcalendar</artifactId>
+            <version>1.4</version>
         </dependency>
         <dependency>
             <groupId>unknown.binary</groupId>
@@ -44,19 +42,15 @@
             <version>SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.toedter</groupId>
-            <artifactId>jcalendar</artifactId>
-            <version>1.4</version>
-        </dependency>
-        <dependency>
             <groupId>unknown.binary</groupId>
             <artifactId>TimingFramework-0.55</artifactId>
             <version>SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>unknown.binary</groupId>
-            <artifactId>mysql-connector-java-5.1.23-bin</artifactId>
-            <version>SNAPSHOT</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <properties>
@@ -66,37 +60,48 @@
         <exec.mainClass>com.mycompany.quanlydoituongdacbiet.QuanLyDoiTuong.QuanLyDoiTuongDacBiet</exec.mainClass>
     </properties>
     <build>
-    <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-shade-plugin</artifactId>
-            <version>3.5.1</version>
-            <executions>
-                <execution>
-                    <phase>package</phase>
-                    <goals>
-                        <goal>shade</goal>
-                    </goals>
-                    <configuration>
-                        <transformers>
-                            <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                <mainClass>${exec.mainClass}</mainClass>
-                            </transformer>
-                        </transformers>
-                        <filters>
-                            <filter>
-                                <artifact>*:*</artifact>
-                                <excludes>
-                                    <exclude>META-INF/*.SF</exclude>
-                                    <exclude>META-INF/*.DSA</exclude>
-                                    <exclude>META-INF/*.RSA</exclude>
-                                </excludes>
-                            </filter>
-                        </filters>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
-    </plugins>
-</build>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.png</include>
+                    <include>**/*.jpg</include>
+                    <include>**/*.jpeg</include>
+                    <include>**/*.gif</include>
+                </includes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>${exec.mainClass}</mainClass>
+                                </transformer>
+                            </transformers>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

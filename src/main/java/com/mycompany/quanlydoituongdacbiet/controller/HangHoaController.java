@@ -1,96 +1,148 @@
-package com.mycompany.quanlydoituongdacbiet.controller; // gói chứa lớp điều khiển
+package com.mycompany.quanlydoituongdacbiet.controller;
 
-import com.mycompany.quanlydoituongdacbiet.action.ManagerHangHoa; // lớp nghiệp vụ
-import com.mycompany.quanlydoituongdacbiet.entity.HangHoa; // lớp hàng hoá
-import com.mycompany.quanlydoituongdacbiet.view.HangHoaView; // lớp giao diện
-import java.awt.event.ActionEvent; // sự kiện bấm nút
-import java.awt.event.ActionListener; // giao diện lắng nghe sự kiện bấm nút
-import javax.swing.event.ListSelectionEvent; // sự kiện chọn dòng trong bảng
-import javax.swing.event.ListSelectionListener; // giao diện lắng nghe việc chọn dòng
+import com.mycompany.quanlydoituongdacbiet.action.ManagerHangHoa;
+import com.mycompany.quanlydoituongdacbiet.action.ManagerLoHang;
+import com.mycompany.quanlydoituongdacbiet.entity.HangHoa;
+import com.mycompany.quanlydoituongdacbiet.view.HangHoaView;
+import com.mycompany.quanlydoituongdacbiet.view.TonKhoLoView;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
-public class HangHoaController { // nối giao diện (view) với nghiệp vụ (manager)
+public class HangHoaController {
 
-    private final HangHoaView view; // tham chiếu tới giao diện
-    private final ManagerHangHoa manager; // tham chiếu tới lớp nghiệp vụ
+    private final HangHoaView view;
+    private final ManagerHangHoa manager;
+    private final ManagerLoHang managerLo;
 
-    public HangHoaController(HangHoaView view) { // constructor nhận giao diện
-        this.view = view; // lưu giao diện
-        this.manager = new ManagerHangHoa(); // tạo lớp nghiệp vụ (tự đọc file XML)
-        view.addAddListener(new AddListener()); // gắn xử lý cho nút Thêm
-        view.addEditListener(new EditListener()); // gắn xử lý cho nút Sửa
-        view.addDeleteListener(new DeleteListener()); // gắn xử lý cho nút Xoá
-        view.addClearListener(new ClearListener()); // gắn xử lý cho nút Làm mới
-        view.addTableSelectionListener(new SelectionListener()); // gắn xử lý khi chọn dòng trong bảng
-        view.showListHangHoa(manager.getListHangHoa()); // hiển thị danh sách ban đầu lên bảng
-    } // kết thúc constructor
+    public HangHoaController(HangHoaView view) {
+        this.view = view;
+        this.manager = new ManagerHangHoa();
+        this.managerLo = new ManagerLoHang();
 
-    public void showView() { // hiện cửa sổ
-        view.setVisible(true); // bật hiển thị
-    } // kết thúc hàm
+        view.addAddListener(new AddListener());
+        view.addEditListener(new EditListener());
+        view.addDeleteListener(new DeleteListener());
+        view.addClearListener(new ClearListener());
+        view.addXemLoListener(new XemLoListener());
+        view.addTableSelectionListener(new SelectionListener());
 
-    class AddListener implements ActionListener { // xử lý nút Thêm
-        public void actionPerformed(ActionEvent e) { // chạy khi bấm nút
-            HangHoa h = view.getHangHoaInfo(); // lấy dữ liệu từ form
-            if (h == null) return; // đơn giá nhập sai (view đã báo) thì dừng
-            String error = manager.add(h); // thêm; nhận về thông báo lỗi hoặc null
-            if (error != null) { // có lỗi
-                view.showMessage(error); // hiện lỗi cho người dùng
-                return; // dừng
-            } // kết thúc if
-            view.showListHangHoa(manager.getListHangHoa()); // nạp lại bảng
-            view.clearForm(); // xoá trắng form
-            view.showMessage("Thêm hàng hoá thành công."); // báo thành công
-        } // kết thúc hàm
-    } // kết thúc lớp AddListener
+        view.addWindowFocusListener(new WindowAdapter() {
+            @Override
+            public void windowGainedFocus(WindowEvent e) {
+                lamMoiBang();
+            }
+        });
+        lamMoiBang();
+    }
 
-    class EditListener implements ActionListener { // xử lý nút Sửa
-        public void actionPerformed(ActionEvent e) { // chạy khi bấm nút
-            if (view.getSelectedId() < 0) { // chưa chọn dòng nào
-                view.showMessage("Hãy chọn hàng hoá cần sửa trong bảng."); // nhắc người dùng
-                return; // dừng
-            } // kết thúc if
-            HangHoa h = view.getHangHoaInfo(); // lấy dữ liệu từ form
-            if (h == null) return; // dữ liệu sai thì dừng
-            String error = manager.edit(h); // sửa; nhận lỗi hoặc null
-            if (error != null) { // có lỗi
-                view.showMessage(error); // hiện lỗi
-                return; // dừng
-            } // kết thúc if
-            view.showListHangHoa(manager.getListHangHoa()); // nạp lại bảng
-            view.clearForm(); // xoá trắng form
-            view.showMessage("Cập nhật hàng hoá thành công."); // báo thành công
-        } // kết thúc hàm
-    } // kết thúc lớp EditListener
+    private void lamMoiBang() {
+        manager.taiLai();
+        managerLo.taiLai();
+        view.showListHangHoa(manager.getListHangHoa(), managerLo);
+    }
 
-    class DeleteListener implements ActionListener { // xử lý nút Xoá
-        public void actionPerformed(ActionEvent e) { // chạy khi bấm nút
-            if (view.getSelectedId() < 0) { // chưa chọn dòng
-                view.showMessage("Hãy chọn hàng hoá cần xoá trong bảng."); // nhắc người dùng
-                return; // dừng
-            } // kết thúc if
-            if (!view.confirm("Bạn có chắc muốn xoá hàng hoá này?")) return; // hỏi xác nhận, chọn "No" thì dừng
-            if (manager.delete(view.getSelectedId())) { // xoá theo id, true nếu thành công
-                view.showListHangHoa(manager.getListHangHoa()); // nạp lại bảng
-                view.clearForm(); // xoá trắng form
-            } else { // không xoá được
-                view.showMessage("Không tìm thấy hàng hoá cần xoá."); // báo lỗi
-            } // kết thúc if-else
-        } // kết thúc hàm
-    } // kết thúc lớp DeleteListener
+    public void showView() {
+        view.setVisible(true);
+    }
 
-    class ClearListener implements ActionListener { // xử lý nút Làm mới
-        public void actionPerformed(ActionEvent e) { // chạy khi bấm nút
-            view.clearForm(); // xoá trắng form, bỏ chọn dòng
-        } // kết thúc hàm
-    } // kết thúc lớp ClearListener
+    class AddListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            HangHoa h = view.getHangHoaInfo();
+            if (h == null) {
+                return;
+            }
+            String error = manager.themHangHoa(h);
+            if (error != null) {
+                view.showMessage(error);
+                return;
+            }
+            lamMoiBang();
+            view.clearForm();
+            view.showMessage("Thêm mặt hàng thành công! Hãy sang mục Lập Phiếu Nhập để nhập các lô hàng vào kho.");
+        }
+    }
 
-    class SelectionListener implements ListSelectionListener { // xử lý khi chọn dòng trong bảng
-        public void valueChanged(ListSelectionEvent e) { // chạy khi lựa chọn thay đổi
-            if (e.getValueIsAdjusting()) return; // bỏ qua sự kiện trung gian khi đang kéo chọn
-            int row = view.getSelectedRow(); // lấy chỉ số dòng đang chọn (-1 nếu không có)
-            if (row >= 0 && row < manager.getListHangHoa().size()) { // dòng hợp lệ
-                view.fillForm(manager.getListHangHoa().get(row)); // đổ dữ liệu dòng đó lên form (thứ tự bảng = thứ tự danh sách)
-            } // kết thúc if
-        } // kết thúc hàm
-    } // kết thúc lớp SelectionListener
-} // kết thúc lớp HangHoaController
+    class EditListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (view.getSelectedId() < 0) {
+                view.showMessage("Hãy chọn mặt hàng cần sửa trong bảng.");
+                return;
+            }
+            HangHoa h = view.getHangHoaInfo();
+            if (h == null) {
+                return;
+            }
+            String error = manager.suaHangHoa(h);
+            if (error != null) {
+                view.showMessage(error);
+                return;
+            }
+            lamMoiBang();
+            view.clearForm();
+            view.showMessage("Cập nhật mặt hàng thành công.");
+        }
+    }
+
+    class DeleteListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (view.getSelectedId() < 0) {
+                view.showMessage("Hãy chọn mặt hàng cần xoá trong bảng.");
+                return;
+            }
+            if (!view.confirm("Bạn có chắc muốn xoá mặt hàng này khỏi danh mục?")) {
+                return;
+            }
+            String loi = manager.xoaHangHoa(view.getSelectedId());
+            if (loi != null) {
+                view.showMessage(loi);
+                return;
+            }
+            lamMoiBang();
+            view.clearForm();
+            view.showMessage("Đã xoá mặt hàng khỏi danh mục.");
+        }
+    }
+
+    class ClearListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            view.clearForm();
+        }
+    }
+
+    class XemLoListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int id = view.getSelectedId();
+            if (id < 0) {
+                view.showMessage("Hãy chọn 1 mặt hàng trong bảng để xem các lô của mặt hàng đó.");
+                return;
+            }
+            TonKhoLoView loView = new TonKhoLoView(id);
+            loView.setVisible(true);
+        }
+    }
+
+    class SelectionListener implements ListSelectionListener {
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            if (e.getValueIsAdjusting()) {
+                return;
+            }
+            int id = view.getSelectedModelId();
+            if (id >= 0) {
+                HangHoa h = manager.findById(id);
+                if (h != null) {
+                    view.fillForm(h);
+                }
+            }
+        }
+    }
+}

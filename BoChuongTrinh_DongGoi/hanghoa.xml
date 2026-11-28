@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DanhSachHangHoa>
+    <HangHoa>
+        <id>1</id>
+        <maHang>83VNHS</maHang>
+        <tenHang>Thùng sữa đậu nành Fami (36 hộp)</tenHang>
+        <nhomHang>Sữa</nhomHang>
+        <donViTinh>Thùng</donViTinh>
+        <donGia>220000</donGia>
+        <tonToiThieu>10</tonToiThieu>
+    </HangHoa>
+    <HangHoa>
+        <id>2</id>
+        <maHang>62JSHB</maHang>
+        <tenHang>Thùng mì Hảo Hảo tôm chua cay (30 gói)</tenHang>
+        <nhomHang>Mì - Miến - Cháo</nhomHang>
+        <donViTinh>Thùng</donViTinh>
+        <donGia>118000</donGia>
+        <tonToiThieu>10</tonToiThieu>
+    </HangHoa>
+    <HangHoa>
+        <id>3</id>
+        <maHang>51BKOR</maHang>
+        <tenHang>Bánh quy bơ Cosy Marie (gói lớn)</tenHang>
+        <nhomHang>Bánh kẹo</nhomHang>
+        <donViTinh>Gói</donViTinh>
+        <donGia>45000</donGia>
+        <tonToiThieu>5</tonToiThieu>
+    </HangHoa>
+    <HangHoa>
+        <id>4</id>
+        <maHang>74SUAT</maHang>
+        <tenHang>Sữa tươi tiệt trùng Vinamilk (lốc 4 hộp)</tenHang>
+        <nhomHang>Sữa</nhomHang>
+        <donViTinh>Lốc</donViTinh>
+        <donGia>32000</donGia>
+        <tonToiThieu>15</tonToiThieu>
+    </HangHoa>
+    <HangHoa>
+        <id>5</id>
+        <maHang>90NMDN</maHang>
+        <tenHang>Nước mắm Nam Ngư Đệ Nhị (chai 900ml)</tenHang>
+        <nhomHang>Gia vị</nhomHang>
+        <donViTinh>Chai</donViTinh>
+        <donGia>26000</donGia>
+        <tonToiThieu>8</tonToiThieu>
+    </HangHoa>
+    <HangHoa>
+        <id>6</id>
+        <maHang>35GDCH</maHang>
+        <tenHang>Chổi quét nhà cán nhựa Đa Năng</tenHang>
+        <nhomHang>Đồ dùng gia đình</nhomHang>
+        <donViTinh>Cái</donViTinh>
+        <donGia>38000</donGia>
+        <tonToiThieu>5</tonToiThieu>
+    </HangHoa>
+</DanhSachHangHoa>

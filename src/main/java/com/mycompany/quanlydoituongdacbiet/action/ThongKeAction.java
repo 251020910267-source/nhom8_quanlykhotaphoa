@@ -1,108 +1,226 @@
-package com.mycompany.quanlydoituongdacbiet.action; // khai báo gói chứa lớp xử lý nghiệp vụ
+package com.mycompany.quanlydoituongdacbiet.action;
 
-import com.mycompany.quanlydoituongdacbiet.entity.HangHoa; // nạp lớp đối tượng Hàng hoá
-import java.util.ArrayList; // nạp lớp danh sách động ArrayList
-import java.util.Calendar; // nạp lớp Calendar để tính toán ngày tháng
-import java.util.Comparator; // nạp giao diện Comparator để so sánh tìm Max/Min
-import java.util.Date; // nạp lớp Date biểu diễn ngày tháng
-import java.util.LinkedHashMap; // nạp Map giữ nguyên thứ tự thêm vào để thống kê nhóm
-import java.util.List; // nạp giao diện List
-import java.util.Map; // nạp giao diện Map (cặp Khoá - Giá trị)
+import com.mycompany.quanlydoituongdacbiet.entity.HangHoa;
+import com.mycompany.quanlydoituongdacbiet.entity.LoHang;
+import com.mycompany.quanlydoituongdacbiet.entity.PhieuGiaoDich;
+import com.mycompany.quanlydoituongdacbiet.entity.PhieuHuy;
+import com.mycompany.quanlydoituongdacbiet.entity.PhieuNhap;
+import com.mycompany.quanlydoituongdacbiet.entity.PhieuXuat;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
-/** Lớp xử lý nghiệp vụ Tìm kiếm & Thống kê báo cáo cho Thành viên 5. */
-public class ThongKeAction { // bắt đầu định nghĩa lớp ThongKeAction
+/**
+ * Lớp xử lý nghiệp vụ Tìm kiếm & Thống kê báo cáo kho hàng (Thành viên 5).
+ * Kết hợp dữ liệu Danh mục Hàng hoá + Lô hàng + Phiếu Nhập/Xuất/Huỷ thực tế.
+ */
+public class ThongKeAction {
 
-    // 1. Tìm kiếm gần đúng theo chuỗi (Mã hàng, Tên hàng, Nhóm hàng)
-    public List<HangHoa> timKiemHangHoaTheoChuoi(List<HangHoa> dsGoc, String tuKhoa) { // nhận danh sách gốc và từ khoá
-        List<HangHoa> ketQua = new ArrayList<>(); // tạo danh sách rỗng chứa kết quả khớp điều kiện
-        if (tuKhoa == null || tuKhoa.trim().isEmpty()) { // nếu người dùng để trống từ khoá
-            return new ArrayList<>(dsGoc); // trả về toàn bộ danh sách gốc ban đầu
-        } // kết thúc kiểm tra rỗng
-        String key = tuKhoa.trim().toLowerCase(); // cắt khoảng trắng 2 đầu và chuyển từ khoá về chữ thường
-        for (HangHoa h : dsGoc) { // duyệt qua từng mặt hàng h trong danh sách gốc
-            boolean matchMa = h.getMaHang() != null && h.getMaHang().toLowerCase().contains(key); // kiểm tra mã hàng có chứa từ khoá không
-            boolean matchTen = h.getTenHang() != null && h.getTenHang().toLowerCase().contains(key); // kiểm tra tên hàng có chứa từ khoá không
-            boolean matchNhom = h.getNhomHang() != null && h.getNhomHang().toLowerCase().contains(key); // kiểm tra nhóm hàng có chứa từ khoá không
-            if (matchMa || matchTen || matchNhom) { // nếu khớp 1 trong 3 tiêu chí
-                ketQua.add(h); // thêm mặt hàng h vào danh sách kết quả
-            } // kết thúc if
-        } // kết thúc vòng lặp
-        return ketQua; // trả về danh sách các mặt hàng tìm được
-    } // kết thúc hàm tìm kiếm chuỗi
+    // 1. Tìm kiếm gần đúng theo chuỗi (Mã hàng, Tên hàng, Nhóm hàng, hoặc Tên Nhà cung cấp của lô)
+    public List<HangHoa> timKiemHangHoaTheoChuoi(List<HangHoa> dsGoc, List<LoHang> dsLo, String tuKhoa) {
+        List<HangHoa> ketQua = new ArrayList<>();
+        if (dsGoc == null) {
+            return ketQua;
+        }
+        if (tuKhoa == null || tuKhoa.trim().isEmpty()) {
+            return new ArrayList<>(dsGoc);
+        }
+        String key = tuKhoa.trim().toLowerCase();
+        for (HangHoa h : dsGoc) {
+            boolean matchMa = h.getMaHang() != null && h.getMaHang().toLowerCase().contains(key);
+            boolean matchTen = h.getTenHang() != null && h.getTenHang().toLowerCase().contains(key);
+            boolean matchNhom = h.getNhomHang() != null && h.getNhomHang().toLowerCase().contains(key);
+            boolean matchNCC = false;
+            if (dsLo != null) {
+                for (LoHang lo : dsLo) {
+                    if (lo.getIdHangHoa() == h.getId() && lo.getTenNhaCungCap() != null
+                            && lo.getTenNhaCungCap().toLowerCase().contains(key)) {
+                        matchNCC = true;
+                        break;
+                    }
+                }
+            }
+            if (matchMa || matchTen || matchNhom || matchNCC) {
+                ketQua.add(h);
+            }
+        }
+        return ketQua;
+    }
 
-    // 2. Tìm kiếm theo khoảng đơn giá [giaTu, giaDen]
-    public List<HangHoa> timKiemTheoKhoangGia(List<HangHoa> dsGoc, long giaTu, long giaDen) { // lọc hàng trong khoảng giá
-        List<HangHoa> ketQua = new ArrayList<>(); // tạo danh sách rỗng chứa kết quả
-        for (HangHoa h : dsGoc) { // duyệt qua từng mặt hàng h
-            if (h.getDonGia() >= giaTu && h.getDonGia() <= giaDen) { // nếu đơn giá nằm từ giaTu đến giaDen
-                ketQua.add(h); // thêm mặt hàng thoả mãn vào danh sách kết quả
-            } // kết thúc if
-        } // kết thúc vòng lặp
-        return ketQua; // trả về danh sách sau khi lọc giá
-    } // kết thúc hàm tìm theo khoảng giá
+    // 2. Tìm kiếm theo khoảng đơn giá bán [giaTu, giaDen]
+    public List<HangHoa> timKiemTheoKhoangGia(List<HangHoa> dsGoc, long giaTu, long giaDen) {
+        List<HangHoa> ketQua = new ArrayList<>();
+        if (dsGoc == null) {
+            return ketQua;
+        }
+        for (HangHoa h : dsGoc) {
+            if (h.getDonGia() >= giaTu && h.getDonGia() <= giaDen) {
+                ketQua.add(h);
+            }
+        }
+        return ketQua;
+    }
 
-    // Kết hợp tìm kiếm cả chuỗi VÀ khoảng giá cùng lúc
-    public List<HangHoa> timKiemKetHop(List<HangHoa> dsGoc, String tuKhoa, long giaTu, long giaDen) { // tìm kiếm đa điều kiện
-        List<HangHoa> locChuoi = timKiemHangHoaTheoChuoi(dsGoc, tuKhoa); // bước 1: lọc theo từ khoá chuỗi trước
-        return timKiemTheoKhoangGia(locChuoi, giaTu, giaDen); // bước 2: lọc tiếp theo khoảng giá
-    } // kết thúc hàm tìm kiếm kết hợp
+    // Kết hợp tìm kiếm chuỗi VÀ khoảng giá cùng lúc
+    public List<HangHoa> timKiemKetHop(List<HangHoa> dsGoc, List<LoHang> dsLo, String tuKhoa, long giaTu, long giaDen) {
+        List<HangHoa> locChuoi = timKiemHangHoaTheoChuoi(dsGoc, dsLo, tuKhoa);
+        return timKiemTheoKhoangGia(locChuoi, giaTu, giaDen);
+    }
 
     // 3. Thống kê Tổng / Lớn nhất / Nhỏ nhất
-    public int tinhTongSoMatHang(List<HangHoa> dsGoc) { // đếm tổng số mặt hàng hiện có
-        return dsGoc == null ? 0 : dsGoc.size(); // nếu null trả về 0, ngược lại trả về số lượng phần tử
-    } // kết thúc hàm đếm tổng mặt hàng
+    public int tinhTongSoMatHang(List<HangHoa> dsGoc) {
+        return dsGoc == null ? 0 : dsGoc.size();
+    }
 
-    public long tinhTongDonGiaDanhMuc(List<HangHoa> dsGoc) { // tính tổng đơn giá của tất cả mặt hàng
-        long tong = 0; // khởi tạo biến cộng dồn bằng 0
-        if (dsGoc != null) { // kiểm tra danh sách khác null
-            for (HangHoa h : dsGoc) { // duyệt từng mặt hàng
-                tong += h.getDonGia(); // cộng dồn đơn giá vào biến tong
-            } // kết thúc vòng lặp
-        } // kết thúc if
-        return tong; // trả về tổng giá trị
-    } // kết thúc hàm tính tổng
+    public HangHoa timHangGiaCaoNhat(List<HangHoa> dsGoc) {
+        if (dsGoc == null || dsGoc.isEmpty()) {
+            return null;
+        }
+        return dsGoc.stream()
+                .max(Comparator.comparingLong(HangHoa::getDonGia))
+                .orElse(null);
+    }
 
-    public HangHoa timHangGiaCaoNhat(List<HangHoa> dsGoc) { // tìm mặt hàng có đơn giá cao nhất (Max)
-        if (dsGoc == null || dsGoc.isEmpty()) return null; // nếu danh sách rỗng thì trả về null
-        return dsGoc.stream() // chuyển danh sách thành luồng dữ liệu Stream
-                .max(Comparator.comparingLong(HangHoa::getDonGia)) // tìm phần tử có getDonGia() lớn nhất
-                .orElse(null); // trả về mặt hàng tìm được
-    } // kết thúc hàm tìm Max
+    public HangHoa timHangGiaThapNhat(List<HangHoa> dsGoc) {
+        if (dsGoc == null || dsGoc.isEmpty()) {
+            return null;
+        }
+        return dsGoc.stream()
+                .min(Comparator.comparingLong(HangHoa::getDonGia))
+                .orElse(null);
+    }
 
-    public HangHoa timHangGiaThapNhat(List<HangHoa> dsGoc) { // tìm mặt hàng có đơn giá thấp nhất (Min)
-        if (dsGoc == null || dsGoc.isEmpty()) return null; // nếu danh sách rỗng thì trả về null
-        return dsGoc.stream() // chuyển danh sách thành luồng dữ liệu Stream
-                .min(Comparator.comparingLong(HangHoa::getDonGia)) // tìm phần tử có getDonGia() nhỏ nhất
-                .orElse(null); // trả về mặt hàng tìm được
-    } // kết thúc hàm tìm Min
+    /** Tổng giá trị hàng đang tồn trong kho (tính theo giá vốn nhập của từng lô còn tồn). */
+    public long tinhTongGiaTriTonKho(List<LoHang> dsLo) {
+        long tong = 0;
+        if (dsLo != null) {
+            for (LoHang lo : dsLo) {
+                tong += lo.getGiaTriTon();
+            }
+        }
+        return tong;
+    }
 
-    // 4. Thống kê số lượng mặt hàng theo từng nhóm hàng
-    public Map<String, Integer> thongKeSoLuongTheoNhom(List<HangHoa> dsGoc) { // gom nhóm và đếm số lượng
-        Map<String, Integer> map = new LinkedHashMap<>(); // tạo Map lưu cặp (Tên nhóm -> Số lượng)
-        if (dsGoc != null) { // kiểm tra danh sách khác null
-            for (HangHoa h : dsGoc) { // duyệt từng mặt hàng
-                String nhom = (h.getNhomHang() == null || h.getNhomHang().trim().isEmpty()) // nếu nhóm hàng bị trống
-                        ? "Khác" : h.getNhomHang().trim(); // trống thì gán là "Khác", ngược lại lấy tên nhóm
-                map.put(nhom, map.getOrDefault(nhom, 0) + 1); // lấy số đếm cũ cộng thêm 1 rồi lưu lại
-            } // kết thúc vòng lặp
-        } // kết thúc if
-        return map; // trả về bảng thống kê theo nhóm
-    } // kết thúc hàm thống kê nhóm
+    /** Tổng tiền đã chi nhập hàng từ các nhà cung cấp. */
+    public long tinhTongTienNhap(List<PhieuGiaoDich> dsPhieu) {
+        long tong = 0;
+        if (dsPhieu != null) {
+            for (PhieuGiaoDich p : dsPhieu) {
+                if (p instanceof PhieuNhap) {
+                    tong += Math.round(p.tinhThanhTien());
+                }
+            }
+        }
+        return tong;
+    }
 
-    // 5. Cảnh báo tự động hàng đã hết hạn hoặc sắp hết hạn trong N ngày tới
-    public List<HangHoa> layDanhSachCanhBaoHetHan(List<HangHoa> dsGoc, int soNgayCanhBao) { // lọc hàng sắp/đã hết hạn
-        List<HangHoa> ketQua = new ArrayList<>(); // tạo danh sách chứa các mặt hàng cần cảnh báo
-        if (dsGoc == null) return ketQua; // nếu danh sách gốc null thì trả về list rỗng
+    /** Tổng doanh thu xuất bán hàng (đã gồm VAT). */
+    public long tinhTongDoanhThuXuat(List<PhieuGiaoDich> dsPhieu) {
+        long tong = 0;
+        if (dsPhieu != null) {
+            for (PhieuGiaoDich p : dsPhieu) {
+                if (p instanceof PhieuXuat) {
+                    tong += Math.round(p.tinhThanhTien());
+                }
+            }
+        }
+        return tong;
+    }
 
-        Calendar cal = Calendar.getInstance(); // lấy lịch tại thời điểm hiện tại
-        cal.add(Calendar.DAY_OF_YEAR, soNgayCanhBao); // cộng thêm số ngày cảnh báo (ví dụ +30 ngày)
-        Date mocThoiGian = cal.getTime(); // chuyển mốc thời gian tương lai sang kiểu Date
+    /** Tổng giá trị thiệt hại do hàng hư hỏng / hết hạn phải huỷ. */
+    public long tinhTongThietHaiHuy(List<PhieuGiaoDich> dsPhieu) {
+        long tong = 0;
+        if (dsPhieu != null) {
+            for (PhieuGiaoDich p : dsPhieu) {
+                if (p instanceof PhieuHuy) {
+                    tong += Math.round(p.tinhThanhTien());
+                }
+            }
+        }
+        return tong;
+    }
 
-        for (HangHoa h : dsGoc) { // duyệt từng mặt hàng trong kho
-            if (h.getHanSuDung() != null && h.getHanSuDung().before(mocThoiGian)) { // nếu hạn sử dụng trước mốc thời gian
-                ketQua.add(h); // thêm vào danh sách cảnh báo
-            } // kết thúc if
-        } // kết thúc vòng lặp
-        return ketQua; // trả về danh sách cảnh báo
-    } // kết thúc hàm cảnh báo hết hạn
-} // kết thúc lớp ThongKeAction
+    // 4. Lọc các lô còn tồn đã hết hạn hoặc sắp hết hạn trong N ngày tới
+    public List<LoHang> layDanhSachLoCanhBaoHetHan(List<LoHang> dsLo, int soNgayCanhBao) {
+        List<LoHang> ketQua = new ArrayList<>();
+        if (dsLo == null) {
+            return ketQua;
+        }
+        for (LoHang lo : dsLo) {
+            if (lo.getSoLuongCon() > 0 && (lo.isHetHan() || lo.isSapHetHan(soNgayCanhBao))) {
+                ketQua.add(lo);
+            }
+        }
+        ketQua.sort(ManagerLoHang.THEO_HSD);
+        return ketQua;
+    }
+
+    /** Lấy danh sách mặt hàng có lô đang hết hạn hoặc sắp hết hạn trong N ngày. */
+    public List<HangHoa> layMatHangCoLoSapHetHan(List<HangHoa> dsHang, List<LoHang> dsLo, int soNgay) {
+        List<LoHang> loCanhBao = layDanhSachLoCanhBaoHetHan(dsLo, soNgay);
+        List<HangHoa> ketQua = new ArrayList<>();
+        if (dsHang == null) {
+            return ketQua;
+        }
+        for (HangHoa h : dsHang) {
+            for (LoHang lo : loCanhBao) {
+                if (lo.getIdHangHoa() == h.getId()) {
+                    ketQua.add(h);
+                    break;
+                }
+            }
+        }
+        return ketQua;
+    }
+
+    /** Lấy danh sách mặt hàng có tồn khả dụng <= định mức tồn tối thiểu (cần nhập thêm). */
+    public List<HangHoa> layMatHangSapHetTon(List<HangHoa> dsHang, ManagerLoHang qlLo) {
+        List<HangHoa> ketQua = new ArrayList<>();
+        if (dsHang == null) {
+            return ketQua;
+        }
+        for (HangHoa h : dsHang) {
+            if (qlLo.tinhTonKhaDung(h.getId()) <= h.getTonToiThieu()) {
+                ketQua.add(h);
+            }
+        }
+        return ketQua;
+    }
+
+    // 5. Thống kê tồn kho theo nhóm hàng & thiệt hại theo nguyên nhân hư hỏng
+    public Map<String, String> thongKeChiTietTheoNhom(List<HangHoa> dsHang, ManagerLoHang qlLo) {
+        Map<String, int[]> tam = new LinkedHashMap<>(); // [số mặt hàng, tổng SL tồn]
+        if (dsHang != null) {
+            for (HangHoa h : dsHang) {
+                String nhom = (h.getNhomHang() == null || h.getNhomHang().trim().isEmpty())
+                        ? "Khác" : h.getNhomHang().trim();
+                int[] v = tam.computeIfAbsent(nhom, k -> new int[]{0, 0});
+                v[0] += 1;
+                v[1] += qlLo.tinhTonKho(h.getId());
+            }
+        }
+        Map<String, String> kq = new LinkedHashMap<>();
+        for (Map.Entry<String, int[]> e : tam.entrySet()) {
+            kq.put(e.getKey(), e.getValue()[0] + " mặt hàng | Tồn: " + e.getValue()[1]);
+        }
+        return kq;
+    }
+
+    public Map<String, long[]> thongKeThietHaiTheoLyDo(List<PhieuGiaoDich> dsPhieu) {
+        Map<String, long[]> map = new LinkedHashMap<>(); // [tổng SL hỏng, tổng tiền thiệt hại]
+        if (dsPhieu != null) {
+            for (PhieuGiaoDich p : dsPhieu) {
+                if (p instanceof PhieuHuy) {
+                    PhieuHuy ph = (PhieuHuy) p;
+                    String lyDo = ph.getDoiTac().isEmpty() ? "Khác" : ph.getDoiTac();
+                    long[] v = map.computeIfAbsent(lyDo, k -> new long[]{0, 0});
+                    v[0] += ph.getSoLuong();
+                    v[1] += Math.round(ph.tinhThanhTien());
+                }
+            }
+        }
+        return map;
+    }
+}

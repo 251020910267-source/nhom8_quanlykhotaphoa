@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PhieuGiaoDichs>
+    <PhieuNhap>
+        <id>1</id>
+        <maDonHang>DHN0001</maDonHang>
+        <ngayGiaoDich>2026-10-05T08:30:00+07:00</ngayGiaoDich>
+        <maHangHoa>1</maHangHoa>
+        <idLoHang>1</idLoHang>
+        <soLuong>40</soLuong>
+        <donGia>190000.0</donGia>
+        <ghiChu>Nhập đợt 1 từ NCC Thành Long</ghiChu>
+        <idNhaCungCap>1</idNhaCungCap>
+        <tenNhaCungCap>Công Ty Hữu Hạn Thành Long</tenNhaCungCap>
+        <hanSuDung>2027-05-15T00:00:00+07:00</hanSuDung>
+    </PhieuNhap>
+    <PhieuNhap>
+        <id>2</id>
+        <maDonHang>DHN0002</maDonHang>
+        <ngayGiaoDich>2026-11-10T09:15:00+07:00</ngayGiaoDich>
+        <maHangHoa>1</maHangHoa>
+        <idLoHang>2</idLoHang>
+        <soLuong>30</soLuong>
+        <donGia>186000.0</donGia>
+        <ghiChu>Nhập đợt 2 từ NCC Minh Tâm (HSD mới hơn)</ghiChu>
+        <idNhaCungCap>2</idNhaCungCap>
+        <tenNhaCungCap>Nhà Phân Phối Minh Tâm</tenNhaCungCap>
+        <hanSuDung>2027-09-20T00:00:00+07:00</hanSuDung>
+    </PhieuNhap>
+    <PhieuNhap>
+        <id>3</id>
+        <maDonHang>DHN0001</maDonHang>
+        <ngayGiaoDich>2026-10-05T08:30:00+07:00</ngayGiaoDich>
+        <maHangHoa>2</maHangHoa>
+        <idLoHang>3</idLoHang>
+        <soLuong>25</soLuong>
+        <donGia>98000.0</donGia>
+        <ghiChu>Nhập chung đơn DHN0001</ghiChu>
+        <idNhaCungCap>1</idNhaCungCap>
+        <tenNhaCungCap>Công Ty Hữu Hạn Thành Long</tenNhaCungCap>
+        <hanSuDung>2026-12-15T00:00:00+07:00</hanSuDung>
+    </PhieuNhap>
+    <PhieuNhap>
+        <id>4</id>
+        <maDonHang>DHN0003</maDonHang>
+        <ngayGiaoDich>2026-09-20T10:00:00+07:00</ngayGiaoDich>
+        <maHangHoa>5</maHangHoa>
+        <idLoHang>4</idLoHang>
+        <soLuong>20</soLuong>
+        <donGia>20000.0</donGia>
+        <ghiChu></ghiChu>
+        <idNhaCungCap>3</idNhaCungCap>
+        <tenNhaCungCap>Đại Lý Thực Phẩm An Phát</tenNhaCungCap>
+        <hanSuDung>2027-09-20T00:00:00+07:00</hanSuDung>
+    </PhieuNhap>
+    <PhieuNhap>
+        <id>5</id>
+        <maDonHang>DHN0004</maDonHang>
+        <ngayGiaoDich>2026-10-12T14:00:00+07:00</ngayGiaoDich>
+        <maHangHoa>3</maHangHoa>
+        <idLoHang>5</idLoHang>
+        <soLuong>12</soLuong>
+        <donGia>34000.0</donGia>
+        <ghiChu></ghiChu>
+        <idNhaCungCap>2</idNhaCungCap>
+        <tenNhaCungCap>Nhà Phân Phối Minh Tâm</tenNhaCungCap>
+        <hanSuDung>2027-04-12T00:00:00+07:00</hanSuDung>
+    </PhieuNhap>
+    <PhieuNhap>
+        <id>6</id>
+        <maDonHang>DHN0005</maDonHang>
+        <ngayGiaoDich>2026-08-01T08:00:00+07:00</ngayGiaoDich>
+        <maHangHoa>4</maHangHoa>
+        <idLoHang>6</idLoHang>
+        <soLuong>10</soLuong>
+        <donGia>25000.0</donGia>
+        <ghiChu></ghiChu>
+        <idNhaCungCap>3</idNhaCungCap>
+        <tenNhaCungCap>Đại Lý Thực Phẩm An Phát</tenNhaCungCap>
+        <hanSuDung>2026-11-15T00:00:00+07:00</hanSuDung>
+    </PhieuNhap>
+    <PhieuNhap>
+        <id>7</id>
+        <maDonHang>DHN0006</maDonHang>
+        <ngayGiaoDich>2026-11-01T09:00:00+07:00</ngayGiaoDich>
+        <maHangHoa>6</maHangHoa>
+        <idLoHang>7</idLoHang>
+        <soLuong>15</soLuong>
+        <donGia>26000.0</donGia>
+        <ghiChu>Hàng gia dụng không có HSD</ghiChu>
+        <idNhaCungCap>3</idNhaCungCap>
+        <tenNhaCungCap>Đại Lý Thực Phẩm An Phát</tenNhaCungCap>
+    </PhieuNhap>
+    <PhieuXuat>
+        <id>8</id>
+        <maDonHang>HDX0001</maDonHang>
+        <ngayGiaoDich>2026-11-20T15:30:00+07:00</ngayGiaoDich>
+        <maHangHoa>1</maHangHoa>
+        <idLoHang>1</idLoHang>
+        <soLuong>15</soLuong>
+        <donGia>220000.0</donGia>
+        <ghiChu>Xuất theo FEFO từ lô LO00001 (HSD sớm hơn)</ghiChu>
+        <tenKhachHang>Quán Nước Cô Hoa</tenKhachHang>
+    </PhieuXuat>
+    <PhieuXuat>
+        <id>9</id>
+        <maDonHang>HDX0001</maDonHang>
+        <ngayGiaoDich>2026-11-20T15:30:00+07:00</ngayGiaoDich>
+        <maHangHoa>2</maHangHoa>
+        <idLoHang>3</idLoHang>
+        <soLuong>18</soLuong>
+        <donGia>118000.0</donGia>
+        <ghiChu>Mua kèm chung hoá đơn HDX0001</ghiChu>
+        <tenKhachHang>Quán Nước Cô Hoa</tenKhachHang>
+    </PhieuXuat>
+    <PhieuXuat>
+        <id>10</id>
+        <maDonHang>HDX0002</maDonHang>
+        <ngayGiaoDich>2026-11-22T10:15:00+07:00</ngayGiaoDich>
+        <maHangHoa>5</maHangHoa>
+        <idLoHang>4</idLoHang>
+        <soLuong>20</soLuong>
+        <donGia>26000.0</donGia>
+        <ghiChu>Xuất hết lô LO00004</ghiChu>
+        <tenKhachHang>Bếp Ăn Sinh Viên Phenikaa</tenKhachHang>
+    </PhieuXuat>
+    <PhieuXuat>
+        <id>11</id>
+        <maDonHang>HDX0003</maDonHang>
+        <ngayGiaoDich>2026-11-24T16:00:00+07:00</ngayGiaoDich>
+        <maHangHoa>6</maHangHoa>
+        <idLoHang>7</idLoHang>
+        <soLuong>3</soLuong>
+        <donGia>38000.0</donGia>
+        <ghiChu></ghiChu>
+        <tenKhachHang>Khách lẻ</tenKhachHang>
+    </PhieuXuat>
+    <PhieuHuy>
+        <id>12</id>
+        <maDonHang>BBH0001</maDonHang>
+        <ngayGiaoDich>2026-11-23T08:45:00+07:00</ngayGiaoDich>
+        <maHangHoa>1</maHangHoa>
+        <idLoHang>1</idLoHang>
+        <soLuong>3</soLuong>
+        <donGia>190000.0</donGia>
+        <ghiChu>3 thùng góc kho bị chuột cắn thủng hộp</ghiChu>
+        <lyDo>CHUOT_CON_TRUNG</lyDo>
+    </PhieuHuy>
+    <PhieuHuy>
+        <id>13</id>
+        <maDonHang>BBH0002</maDonHang>
+        <ngayGiaoDich>2026-11-25T09:30:00+07:00</ngayGiaoDich>
+        <maHangHoa>3</maHangHoa>
+        <idLoHang>5</idLoHang>
+        <soLuong>12</soLuong>
+        <donGia>34000.0</donGia>
+        <ghiChu>Mưa tạt ẩm tường làm ỉu mốc toàn bộ lô bánh</ghiChu>
+        <lyDo>THOI_TIET</lyDo>
+    </PhieuHuy>
+</PhieuGiaoDichs>

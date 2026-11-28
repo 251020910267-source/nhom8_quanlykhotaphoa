@@ -1,6 +1,8 @@
 package com.mycompany.quanlydoituongdacbiet.utils;
 
 import java.io.File;
+import java.net.URL;
+import javax.swing.ImageIcon;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -42,5 +44,16 @@ public class FileUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * Nạp ảnh từ classpath (khi chạy file .jar đóng gói) hoặc từ thư mục src (khi chạy trong NetBeans).
+     */
+    public static ImageIcon loadViewImage(String tenFile) {
+        URL url = FileUtils.class.getResource("/com/mycompany/quanlydoituongdacbiet/view/" + tenFile);
+        if (url != null) {
+            return new ImageIcon(url);
+        }
+        return new ImageIcon("src/main/java/com/mycompany/quanlydoituongdacbiet/view/" + tenFile);
     }
 }

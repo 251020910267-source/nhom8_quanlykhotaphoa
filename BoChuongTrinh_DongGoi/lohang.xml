@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DanhSachLoHang>
+    <LoHang>
+        <id>1</id>
+        <idHangHoa>1</idHangHoa>
+        <idNhaCungCap>1</idNhaCungCap>
+        <tenNhaCungCap>Công Ty Hữu Hạn Thành Long</tenNhaCungCap>
+        <idPhieuNhap>1</idPhieuNhap>
+        <maDonNhap>DHN0001</maDonNhap>
+        <ngayNhap>2026-10-05T08:30:00+07:00</ngayNhap>
+        <hanSuDung>2027-05-15T00:00:00+07:00</hanSuDung>
+        <soLuongNhap>40</soLuongNhap>
+        <soLuongDaXuat>15</soLuongDaXuat>
+        <soLuongHuHong>3</soLuongHuHong>
+        <giaNhap>190000</giaNhap>
+        <chiTietHuHong>Chuột / côn trùng cắn phá (3)</chiTietHuHong>
+    </LoHang>
+    <LoHang>
+        <id>2</id>
+        <idHangHoa>1</idHangHoa>
+        <idNhaCungCap>2</idNhaCungCap>
+        <tenNhaCungCap>Nhà Phân Phối Minh Tâm</tenNhaCungCap>
+        <idPhieuNhap>2</idPhieuNhap>
+        <maDonNhap>DHN0002</maDonNhap>
+        <ngayNhap>2026-11-10T09:15:00+07:00</ngayNhap>
+        <hanSuDung>2027-09-20T00:00:00+07:00</hanSuDung>
+        <soLuongNhap>30</soLuongNhap>
+        <soLuongDaXuat>0</soLuongDaXuat>
+        <soLuongHuHong>0</soLuongHuHong>
+        <giaNhap>186000</giaNhap>
+        <chiTietHuHong></chiTietHuHong>
+    </LoHang>
+    <LoHang>
+        <id>3</id>
+        <idHangHoa>2</idHangHoa>
+        <idNhaCungCap>1</idNhaCungCap>
+        <tenNhaCungCap>Công Ty Hữu Hạn Thành Long</tenNhaCungCap>
+        <idPhieuNhap>3</idPhieuNhap>
+        <maDonNhap>DHN0001</maDonNhap>
+        <ngayNhap>2026-10-05T08:30:00+07:00</ngayNhap>
+        <hanSuDung>2026-12-15T00:00:00+07:00</hanSuDung>
+        <soLuongNhap>25</soLuongNhap>
+        <soLuongDaXuat>18</soLuongDaXuat>
+        <soLuongHuHong>0</soLuongHuHong>
+        <giaNhap>98000</giaNhap>
+        <chiTietHuHong></chiTietHuHong>
+    </LoHang>
+    <LoHang>
+        <id>4</id>
+        <idHangHoa>5</idHangHoa>
+        <idNhaCungCap>3</idNhaCungCap>
+        <tenNhaCungCap>Đại Lý Thực Phẩm An Phát</tenNhaCungCap>
+        <idPhieuNhap>4</idPhieuNhap>
+        <maDonNhap>DHN0003</maDonNhap>
+        <ngayNhap>2026-09-20T10:00:00+07:00</ngayNhap>
+        <hanSuDung>2027-09-20T00:00:00+07:00</hanSuDung>
+        <soLuongNhap>20</soLuongNhap>
+        <soLuongDaXuat>20</soLuongDaXuat>
+        <soLuongHuHong>0</soLuongHuHong>
+        <giaNhap>20000</giaNhap>
+        <chiTietHuHong></chiTietHuHong>
+    </LoHang>
+    <LoHang>
+        <id>5</id>
+        <idHangHoa>3</idHangHoa>
+        <idNhaCungCap>2</idNhaCungCap>
+        <tenNhaCungCap>Nhà Phân Phối Minh Tâm</tenNhaCungCap>
+        <idPhieuNhap>5</idPhieuNhap>
+        <maDonNhap>DHN0004</maDonNhap>
+        <ngayNhap>2026-10-12T14:00:00+07:00</ngayNhap>
+        <hanSuDung>2027-04-12T00:00:00+07:00</hanSuDung>
+        <soLuongNhap>12</soLuongNhap>
+        <soLuongDaXuat>0</soLuongDaXuat>
+        <soLuongHuHong>12</soLuongHuHong>
+        <giaNhap>34000</giaNhap>
+        <chiTietHuHong>Thời tiết: ẩm mốc, ngấm nước, nóng chảy (12)</chiTietHuHong>
+    </LoHang>
+    <LoHang>
+        <id>6</id>
+        <idHangHoa>4</idHangHoa>
+        <idNhaCungCap>3</idNhaCungCap>
+        <tenNhaCungCap>Đại Lý Thực Phẩm An Phát</tenNhaCungCap>
+        <idPhieuNhap>6</idPhieuNhap>
+        <maDonNhap>DHN0005</maDonNhap>
+        <ngayNhap>2026-08-01T08:00:00+07:00</ngayNhap>
+        <hanSuDung>2026-11-15T00:00:00+07:00</hanSuDung>
+        <soLuongNhap>10</soLuongNhap>
+        <soLuongDaXuat>0</soLuongDaXuat>
+        <soLuongHuHong>0</soLuongHuHong>
+        <giaNhap>25000</giaNhap>
+        <chiTietHuHong></chiTietHuHong>
+    </LoHang>
+    <LoHang>
+        <id>7</id>
+        <idHangHoa>6</idHangHoa>
+        <idNhaCungCap>3</idNhaCungCap>
+        <tenNhaCungCap>Đại Lý Thực Phẩm An Phát</tenNhaCungCap>
+        <idPhieuNhap>7</idPhieuNhap>
+        <maDonNhap>DHN0006</maDonNhap>
+        <ngayNhap>2026-11-01T09:00:00+07:00</ngayNhap>
+        <soLuongNhap>15</soLuongNhap>
+        <soLuongDaXuat>3</soLuongDaXuat>
+        <soLuongHuHong>0</soLuongHuHong>
+        <giaNhap>26000</giaNhap>
+        <chiTietHuHong></chiTietHuHong>
+    </LoHang>
+</DanhSachLoHang>

@@ -1,14 +1,20 @@
 package com.mycompany.quanlydoituongdacbiet.controller;
 
 import com.mycompany.quanlydoituongdacbiet.action.ManagerHangHoa;
+import com.mycompany.quanlydoituongdacbiet.action.ManagerLoHang;
 import com.mycompany.quanlydoituongdacbiet.action.ManagerNhaCungCap;
 import com.mycompany.quanlydoituongdacbiet.action.ManagerPhieuGiaoDich;
 import com.mycompany.quanlydoituongdacbiet.entity.HangHoa;
+import com.mycompany.quanlydoituongdacbiet.entity.LoHang;
+import com.mycompany.quanlydoituongdacbiet.entity.LyDoHuHong;
 import com.mycompany.quanlydoituongdacbiet.entity.NhaCungCap;
 import com.mycompany.quanlydoituongdacbiet.entity.PhieuGiaoDich;
+import com.mycompany.quanlydoituongdacbiet.entity.PhieuHuy;
 import com.mycompany.quanlydoituongdacbiet.entity.PhieuNhap;
 import com.mycompany.quanlydoituongdacbiet.entity.PhieuXuat;
 import com.mycompany.quanlydoituongdacbiet.utils.FormatUtils;
+import com.mycompany.quanlydoituongdacbiet.view.HoaDonDialog;
+import java.awt.Window;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JComboBox;
@@ -16,10 +22,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+/**
+ * Controller điều phối nghiệp vụ Nhập kho / Xuất bán / Báo hư hỏng (Huỷ) và Xuất Bill.
+ */
 public class PhieuGiaoDichController {
-    private ManagerPhieuGiaoDich managerPhieu;
-    private ManagerHangHoa managerHangHoa;
-    private ManagerNhaCungCap managerNCC;
+    private final ManagerPhieuGiaoDich managerPhieu;
+    private final ManagerHangHoa managerHangHoa;
+    private final ManagerNhaCungCap managerNCC;
 
     public PhieuGiaoDichController() {
         this.managerPhieu = new ManagerPhieuGiaoDich();
@@ -27,141 +36,231 @@ public class PhieuGiaoDichController {
         this.managerNCC = new ManagerNhaCungCap();
     }
 
-    // Nạp danh sách Hàng hóa và Nhà cung cấp vào ComboBox trên giao diện
+    public void taiLaiTatCa() {
+        managerPhieu.taiLai();
+        managerHangHoa.taiLai();
+        managerNCC.taiLai();
+    }
+
+    public String sinhMaDonMoi(String loaiPhieu) {
+        if ("Phiếu Nhập".equals(loaiPhieu)) {
+            return managerPhieu.sinhMaDonTiepTheo("DHN");
+        }
+        if ("Phiếu Xuất".equals(loaiPhieu)) {
+            return managerPhieu.sinhMaDonTiepTheo("HDX");
+        }
+        return managerPhieu.sinhMaDonTiepTheo("BBH");
+    }
+
     public void loadComboBox(JComboBox<String> cboHangHoa, JComboBox<String> cboNhaCungCap) {
         cboHangHoa.removeAllItems();
-        List<HangHoa> listHH = managerHangHoa.getList();
-        if (listHH != null) {
-            for (HangHoa hh : listHH) {
-                cboHangHoa.addItem(hh.getId() + " - " + hh.getTenHang());
-            }
+        for (HangHoa hh : managerHangHoa.getList()) {
+            cboHangHoa.addItem(hh.getId() + " - " + hh.getMaHang() + " - " + hh.getTenHang());
         }
 
         cboNhaCungCap.removeAllItems();
-        List<NhaCungCap> listNCC = managerNCC.getListNCC();
-        if (listNCC != null) {
-            for (NhaCungCap ncc : listNCC) {
-                cboNhaCungCap.addItem(ncc.getTenNCC());
-            }
+        for (NhaCungCap ncc : managerNCC.getListNCC()) {
+            cboNhaCungCap.addItem(ncc.getId() + " - " + ncc.getTenNCC());
         }
     }
 
-    // Tìm tên hàng hóa theo ID để hiển thị lên bảng
-    private String getTenHangById(int id) {
-        List<HangHoa> listHH = managerHangHoa.getList();
-        if (listHH != null) {
-            for (HangHoa hh : listHH) {
-                if (hh.getId() == id) {
-                    return hh.getTenHang();
-                }
-            }
+    /** Nạp các lô phù hợp vào ComboBox khi chọn mặt hàng ở chế độ Xuất (FEFO) hoặc Huỷ. */
+    public void loadLoTheoHangHoa(int idHangHoa, boolean chiLoCoTheXuat, JComboBox<LoHang> cboLo) {
+        cboLo.removeAllItems();
+        if (idHangHoa <= 0) {
+            return;
         }
-        return "Mã HH #" + id;
+        ManagerLoHang qlLo = managerPhieu.getManagerLoHang();
+        List<LoHang> dsLo = chiLoCoTheXuat
+                ? qlLo.getLoCoTheXuat(idHangHoa)
+                : qlLo.getLoConHang(idHangHoa);
+        for (LoHang lo : dsLo) {
+            cboLo.addItem(lo);
+        }
     }
 
-    // Đổ dữ liệu danh sách Phiếu Nhập/Xuất ra JTable
+    public HangHoa timHangHoa(int id) {
+        return managerHangHoa.findById(id);
+    }
+
+    public int getTonKhaDung(int idHangHoa) {
+        return managerPhieu.getManagerLoHang().tinhTonKhaDung(idHangHoa);
+    }
+
+    public int getTonThucTe(int idHangHoa) {
+        return managerPhieu.tinhTonKho(idHangHoa);
+    }
+
     public void showListPhieu(JTable table) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setRowCount(0);
+        ManagerLoHang qlLo = managerPhieu.getManagerLoHang();
+
         for (PhieuGiaoDich p : managerPhieu.getList()) {
-            String loaiPhieu = (p instanceof PhieuNhap) ? "Phiếu Nhập" : "Phiếu Xuất";
-            String doiTac = (p instanceof PhieuNhap)
-                    ? ((PhieuNhap) p).getTenNhaCungCap()
-                    : ((PhieuXuat) p).getTenKhachHang();
+            HangHoa hh = managerHangHoa.findById(p.getMaHangHoa());
+            String tenHang = hh != null ? (hh.getMaHang() + " - " + hh.getTenHang()) : ("HH#" + p.getMaHangHoa());
+            LoHang lo = qlLo.findById(p.getIdLoHang());
+            String thongTinLo;
+            if (lo != null) {
+                thongTinLo = lo.getMaLo() + (lo.getHanSuDung() != null
+                        ? " (" + FormatUtils.formatDate(lo.getHanSuDung()) + ")" : "");
+            } else {
+                thongTinLo = p.getIdLoHang() > 0 ? String.format("LO%05d", p.getIdLoHang()) : "—";
+            }
 
             model.addRow(new Object[]{
-                    p.getId(),
-                    loaiPhieu,
-                    getTenHangById(p.getMaHangHoa()),
-                    doiTac,
-                    FormatUtils.formatDate(p.getNgayGiaoDich()),
-                    p.getSoLuong(),
-                    FormatUtils.formatMoney((long) p.getDonGia()),
-                    FormatUtils.formatMoney((long) p.tinhThanhTien())
+                p.getId(),
+                p.getMaPhieu(),
+                p.getMaDonHangHienThi(),
+                p.getLoaiPhieu(),
+                tenHang,
+                thongTinLo,
+                p.getDoiTac(),
+                FormatUtils.formatDate(p.getNgayGiaoDich()),
+                p.getSoLuong(),
+                FormatUtils.formatMoney(Math.round(p.getDonGia())),
+                FormatUtils.formatMoney(Math.round(p.tinhThanhTien()))
             });
         }
     }
 
-    // Kiểm tra lỗi nhập liệu và thêm phiếu mới
-    public boolean themPhieu(String loaiPhieu, String itemHangHoa, String nhaCungCap,
-                             String khachHang, Date ngayGiaoDich, String strSoLuong, String strDonGia) {
+    /** Lập phiếu Nhập / Xuất / Huỷ; trả về Mã đơn hàng nếu thành công, ngược lại trả null. */
+    public String lapPhieu(Window parent, String loaiPhieu, String maDonHang,
+            String itemHangHoa, LoHang loChon, String itemNCC, String khachHang,
+            LyDoHuHong lyDo, Date ngayGD, Date hsdNhap, boolean khongHSD,
+            String strSoLuong, String strDonGia, String ghiChu) {
+
         if (itemHangHoa == null || itemHangHoa.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Vui lòng chọn hàng hóa!", "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
-            return false;
+            JOptionPane.showMessageDialog(parent, "Vui lòng chọn mặt hàng!", "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
+            return null;
         }
-        if (ngayGiaoDich == null) {
-            JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày giao dịch!", "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
-            return false;
-        }
+        int idHangHoa = Integer.parseInt(itemHangHoa.split(" - ")[0].trim());
 
         int soLuong;
         try {
             soLuong = Integer.parseInt(strSoLuong.trim());
-            if (soLuong <= 0) throw new NumberFormatException();
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Số lượng phải là số nguyên dương (> 0)!", "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
-            return false;
+            if (soLuong <= 0) {
+                throw new NumberFormatException();
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(parent, "Số lượng phải là số nguyên dương (> 0)!", "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
+            return null;
         }
-
-        long donGia;
-        try {
-            donGia = FormatUtils.parseMoney(strDonGia);
-            if (donGia <= 0) throw new NumberFormatException();
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Đơn giá phải là số lớn hơn 0!", "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
-            return false;
-        }
-
-        // Tách lấy ID hàng hóa từ chuỗi "1 - Sữa tươi"
-        int maHangHoa = Integer.parseInt(itemHangHoa.split(" - ")[0].trim());
 
         if ("Phiếu Nhập".equals(loaiPhieu)) {
-            if (nhaCungCap == null || nhaCungCap.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Vui lòng chọn nhà cung cấp!", "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
-                return false;
+            if (itemNCC == null || itemNCC.isEmpty()) {
+                JOptionPane.showMessageDialog(parent, "Vui lòng chọn nhà cung cấp!", "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
+                return null;
             }
-            PhieuNhap pn = new PhieuNhap(0, ngayGiaoDich, maHangHoa, soLuong, donGia, nhaCungCap.trim());
-            managerPhieu.add(pn);
-            JOptionPane.showMessageDialog(null, "Lập Phiếu Nhập thành công!");
-            return true;
+            if (!khongHSD && hsdNhap == null) {
+                JOptionPane.showMessageDialog(parent,
+                        "Vui lòng chọn Hạn sử dụng của lô hàng nhập (hoặc tick 'Hàng không có HSD')!",
+                        "Thiếu hạn sử dụng lô", JOptionPane.WARNING_MESSAGE);
+                return null;
+            }
+            long giaNhap;
+            try {
+                giaNhap = FormatUtils.parseMoney(strDonGia);
+                if (giaNhap <= 0) {
+                    throw new NumberFormatException();
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(parent, "Giá nhập của lô phải là số nguyên dương!", "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
+                return null;
+            }
+            String[] partsNCC = itemNCC.split(" - ", 2);
+            int idNCC = Integer.parseInt(partsNCC[0].trim());
+            String tenNCC = partsNCC.length > 1 ? partsNCC[1].trim() : itemNCC;
+
+            PhieuNhap pn = new PhieuNhap(maDonHang, ngayGD, idHangHoa, soLuong, giaNhap,
+                    idNCC, tenNCC, khongHSD ? null : hsdNhap, ghiChu);
+            String loi = managerPhieu.nhapKho(pn);
+            if (loi != null) {
+                JOptionPane.showMessageDialog(parent, loi, "Không thể lập Phiếu Nhập", JOptionPane.WARNING_MESSAGE);
+                return null;
+            }
+            LoHang loMoi = managerPhieu.getManagerLoHang().findById(pn.getIdLoHang());
+            JOptionPane.showMessageDialog(parent,
+                    "Lập Phiếu Nhập thành công!\n"
+                    + "• Mã đơn nhập: " + pn.getMaDonHangHienThi() + " (" + pn.getMaPhieu() + ")\n"
+                    + "• Đã sinh lô mới: " + (loMoi != null ? loMoi.getMaLo() : "") + " - NCC: " + tenNCC);
+            return pn.getMaDonHangHienThi();
+
+        } else if ("Phiếu Xuất".equals(loaiPhieu)) {
+            if (loChon == null) {
+                JOptionPane.showMessageDialog(parent,
+                        "Mặt hàng này hiện không có lô nào CÒN HẠN trong kho để xuất bán!",
+                        "Không có lô khả dụng", JOptionPane.ERROR_MESSAGE);
+                return null;
+            }
+            long giaBan;
+            try {
+                giaBan = FormatUtils.parseMoney(strDonGia);
+                if (giaBan <= 0) {
+                    throw new NumberFormatException();
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(parent, "Đơn giá bán phải là số nguyên dương!", "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
+                return null;
+            }
+            PhieuXuat px = new PhieuXuat(maDonHang, ngayGD, idHangHoa, loChon.getId(),
+                    soLuong, giaBan, khachHang, ghiChu);
+            String loi = managerPhieu.xuatKho(px);
+            if (loi != null) {
+                JOptionPane.showMessageDialog(parent, loi, "Cảnh báo xuất kho", JOptionPane.ERROR_MESSAGE);
+                return null;
+            }
+            JOptionPane.showMessageDialog(parent,
+                    "Lập Phiếu Xuất bán thành công từ lô " + loChon.getMaLo() + "!\n"
+                    + "• Số hoá đơn (Bill): " + px.getMaDonHangHienThi());
+            return px.getMaDonHangHienThi();
+
         } else {
-            if (khachHang == null || khachHang.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Vui lòng nhập tên khách hàng!", "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
-                return false;
+            if (loChon == null) {
+                JOptionPane.showMessageDialog(parent,
+                        "Vui lòng chọn lô hàng đang còn tồn trong kho để báo hư hỏng / huỷ!",
+                        "Chưa chọn lô", JOptionPane.WARNING_MESSAGE);
+                return null;
             }
-            int tonHienTai = managerPhieu.tinhTonKho(maHangHoa);
-            if (soLuong > tonHienTai) {
-                JOptionPane.showMessageDialog(null,
-                        "Số lượng xuất (" + soLuong + ") vượt quá tồn kho hiện tại (" + tonHienTai + ")!",
-                        "Cảnh báo tồn kho", JOptionPane.ERROR_MESSAGE);
-                return false;
+            PhieuHuy ph = new PhieuHuy(maDonHang, ngayGD, loChon.getId(), soLuong, lyDo, ghiChu);
+            String loi = managerPhieu.baoHuHong(ph);
+            if (loi != null) {
+                JOptionPane.showMessageDialog(parent, loi, "Không thể lập Phiếu Huỷ", JOptionPane.WARNING_MESSAGE);
+                return null;
             }
-            PhieuXuat px = new PhieuXuat(0, ngayGiaoDich, maHangHoa, soLuong, donGia, khachHang.trim());
-            managerPhieu.add(px);
-            JOptionPane.showMessageDialog(null, "Lập Phiếu Xuất thành công!");
-            return true;
+            JOptionPane.showMessageDialog(parent,
+                    "Đã ghi nhận hư hỏng & trừ tồn kho lô " + loChon.getMaLo() + "!\n"
+                    + "• Mã biên bản: " + ph.getMaDonHangHienThi() + "\n"
+                    + "• Nguyên nhân: " + ph.getDoiTac());
+            return ph.getMaDonHangHienThi();
         }
     }
 
-    // Xóa phiếu theo ID được chọn trên bảng
-    public boolean xoaPhieu(int id) {
-        PhieuGiaoDich target = null;
-        for (PhieuGiaoDich p : managerPhieu.getList()) {
-            if (p.getId() == id) {
-                target = p;
-                break;
-            }
+    public boolean xoaPhieu(Window parent, int id) {
+        PhieuGiaoDich target = managerPhieu.findById(id);
+        if (target == null) {
+            return false;
         }
-        if (target != null) {
-            int confirm = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa phiếu ID = " + id + "?", "Xác nhận", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                return managerPhieu.delete(target);
-            }
+        int confirm = JOptionPane.showConfirmDialog(parent,
+                "Bạn có chắc muốn xoá chứng từ " + target.getMaPhieu()
+                + " (Mã đơn: " + target.getMaDonHangHienThi() + ")?",
+                "Xác nhận xoá", JOptionPane.YES_NO_OPTION);
+        if (confirm != JOptionPane.YES_OPTION) {
+            return false;
         }
-        return false;
+        String loi = managerPhieu.xoaPhieu(id);
+        if (loi != null) {
+            JOptionPane.showMessageDialog(parent, loi, "Không thể xoá phiếu", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
     }
 
-    public int getTonKho(int maHangHoa) {
-        return managerPhieu.tinhTonKho(maHangHoa);
+    public void moCuaSoXuatBill(Window parent, String maDonHang) {
+        if (maDonHang == null || maDonHang.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(parent, "Vui lòng chọn 1 dòng phiếu trên bảng để xuất Bill!");
+            return;
+        }
+        new HoaDonDialog(parent, maDonHang.trim(), managerPhieu, managerHangHoa, managerNCC).setVisible(true);
     }
 }

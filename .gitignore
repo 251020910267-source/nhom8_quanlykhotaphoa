@@ -1,0 +1,4 @@
+/target/
+*.lastUpdated
+resolver-status.properties
+_remote.repositories

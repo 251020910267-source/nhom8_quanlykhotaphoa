@@ -1,120 +1,235 @@
-package com.mycompany.quanlydoituongdacbiet.controller; // khai báo gói chứa lớp điều khiển
+package com.mycompany.quanlydoituongdacbiet.controller;
 
-import com.mycompany.quanlydoituongdacbiet.action.ManagerHangHoa; // nạp lớp đọc/ghi XML hàng hoá
-import com.mycompany.quanlydoituongdacbiet.action.ThongKeAction; // nạp lớp xử lý logic tìm kiếm & thống kê
-import com.mycompany.quanlydoituongdacbiet.entity.HangHoa; // nạp lớp đối tượng Hàng hoá
-import com.mycompany.quanlydoituongdacbiet.utils.FormatUtils; // nạp lớp tiện ích chuyển đổi chuỗi tiền sang số
-import com.mycompany.quanlydoituongdacbiet.view.ThongKeView; // nạp lớp giao diện Tìm kiếm & Thống kê
-import java.awt.event.ActionEvent; // nạp lớp sự kiện bấm nút
-import java.awt.event.ActionListener; // nạp giao diện lắng nghe sự kiện
-import java.util.List; // nạp giao diện List
-import java.util.Map; // nạp giao diện Map
+import com.mycompany.quanlydoituongdacbiet.action.ManagerHangHoa;
+import com.mycompany.quanlydoituongdacbiet.action.ManagerLoHang;
+import com.mycompany.quanlydoituongdacbiet.action.ManagerPhieuGiaoDich;
+import com.mycompany.quanlydoituongdacbiet.action.ThongKeAction;
+import com.mycompany.quanlydoituongdacbiet.entity.HangHoa;
+import com.mycompany.quanlydoituongdacbiet.entity.LoHang;
+import com.mycompany.quanlydoituongdacbiet.entity.PhieuGiaoDich;
+import com.mycompany.quanlydoituongdacbiet.utils.FormatUtils;
+import com.mycompany.quanlydoituongdacbiet.view.ThongKeView;
+import java.awt.Desktop;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
-/** Controller điều phối giữa ThongKeView (giao diện) và ThongKeAction (xử lý logic). */
-public class ThongKeController { // bắt đầu định nghĩa lớp ThongKeController
+/**
+ * Controller điều phối giữa ThongKeView và ThongKeAction (Thành viên 5).
+ */
+public class ThongKeController {
 
-    private final ThongKeView view; // tham chiếu tới giao diện ThongKeView
-    private final ThongKeAction thongKeAction; // tham chiếu tới lớp xử lý nghiệp vụ ThongKeAction
-    private final ManagerHangHoa managerHangHoa; // tham chiếu tới lớp đọc dữ liệu XML hàng hoá
+    private final ThongKeView view;
+    private final ThongKeAction thongKeAction;
+    private final ManagerHangHoa managerHangHoa;
+    private final ManagerPhieuGiaoDich managerPhieu;
 
-    public ThongKeController(ThongKeView view) { // hàm khởi tạo nhận vào giao diện ThongKeView
-        this.view = view; // lưu tham chiếu giao diện
-        this.thongKeAction = new ThongKeAction(); // khởi tạo đối tượng xử lý logic thống kê
-        this.managerHangHoa = new ManagerHangHoa(); // khởi tạo đối tượng đọc file HangHoa.xml
+    private List<HangHoa> danhSachDangHienThi;
 
-        this.view.addTimKiemListener(new TimKiemListener()); // gắn xử lý nút Tìm kiếm
-        this.view.addCanhBaoListener(new CanhBaoListener()); // gắn xử lý nút Lọc hết hạn
-        this.view.addLamMoiListener(new LamMoiListener()); // gắn xử lý nút Làm mới
+    public ThongKeController(ThongKeView view) {
+        this.view = view;
+        this.thongKeAction = new ThongKeAction();
+        this.managerHangHoa = new ManagerHangHoa();
+        this.managerPhieu = new ManagerPhieuGiaoDich();
 
-        taiLaiDuLieuVaThongKe(); // tự động nạp dữ liệu từ XML và tính thống kê ngay khi mở cửa sổ
-    } // kết thúc constructor
+        this.view.addTimKiemListener(new TimKiemListener());
+        this.view.addCanhBaoListener(new CanhBaoListener());
+        this.view.addSapHetTonListener(new SapHetTonListener());
+        this.view.addLamMoiListener(new LamMoiListener());
+        this.view.addXuatBaoCaoListener(new XuatBaoCaoListener());
 
-    public void showThongKeView() { // hiển thị cửa sổ giao diện
-        view.setVisible(true); // bật trạng thái hiển thị JFrame
-    } // kết thúc hàm
+        taiLaiDuLieuVaThongKe();
+    }
 
-    /** Đọc dữ liệu mới nhất từ file HangHoa.xml, đổ lên bảng và cập nhật các chỉ số thống kê */
-    public final void taiLaiDuLieuVaThongKe() { // tải lại toàn bộ dữ liệu
-        List<HangHoa> dsHang = managerHangHoa.readListHangHoa(); // đọc danh sách hàng hoá từ file HangHoa.xml
+    public void showThongKeView() {
+        taiLaiDuLieuVaThongKe();
+        view.setVisible(true);
+    }
 
-        view.showListHangHoa(dsHang); // đổ toàn bộ danh sách lên bảng
+    public final void taiLaiDuLieuVaThongKe() {
+        managerHangHoa.taiLai();
+        managerPhieu.taiLai();
 
-        int tongMatHang = thongKeAction.tinhTongSoMatHang(dsHang); // đếm tổng số mặt hàng
-        long tongGiaTri = thongKeAction.tinhTongDonGiaDanhMuc(dsHang); // tính tổng đơn giá danh mục
-        HangHoa maxGia = thongKeAction.timHangGiaCaoNhat(dsHang); // tìm mặt hàng giá cao nhất
-        HangHoa minGia = thongKeAction.timHangGiaThapNhat(dsHang); // tìm mặt hàng giá thấp nhất
-        int soCanhBao = thongKeAction.layDanhSachCanhBaoHetHan(dsHang, 30).size(); // đếm số hàng hết hạn trong 30 ngày
-        Map<String, Integer> thongKeNhom = thongKeAction.thongKeSoLuongTheoNhom(dsHang); // thống kê số lượng theo từng nhóm
+        List<HangHoa> dsHang = managerHangHoa.getList();
+        ManagerLoHang qlLo = managerPhieu.getManagerLoHang();
+        List<LoHang> dsLo = qlLo.getList();
+        List<PhieuGiaoDich> dsPhieu = managerPhieu.getList();
 
-        view.updateThongKe(tongMatHang, tongGiaTri, maxGia, minGia, soCanhBao, thongKeNhom); // đẩy kết quả lên giao diện
-    } // kết thúc hàm taiLaiDuLieuVaThongKe
+        this.danhSachDangHienThi = dsHang;
+        view.showListHangHoa(dsHang, qlLo);
 
-    // Xử lý sự kiện khi bấm nút "Tìm kiếm"
-    private class TimKiemListener implements ActionListener { // cài đặt ActionListener
+        int tongMatHang = thongKeAction.tinhTongSoMatHang(dsHang);
+        int tongSoLo = dsLo.size();
+        long tongGiaTriTon = thongKeAction.tinhTongGiaTriTonKho(dsLo);
+        HangHoa maxGia = thongKeAction.timHangGiaCaoNhat(dsHang);
+        HangHoa minGia = thongKeAction.timHangGiaThapNhat(dsHang);
+        long tongNhap = thongKeAction.tinhTongTienNhap(dsPhieu);
+        long tongXuat = thongKeAction.tinhTongDoanhThuXuat(dsPhieu);
+        long tongThietHai = thongKeAction.tinhTongThietHaiHuy(dsPhieu);
+        int soLoCanhBaoHSD = thongKeAction.layDanhSachLoCanhBaoHetHan(dsLo, 30).size();
+        int soHangSapHetTon = thongKeAction.layMatHangSapHetTon(dsHang, qlLo).size();
+
+        Map<String, String> theoNhom = thongKeAction.thongKeChiTietTheoNhom(dsHang, qlLo);
+        Map<String, long[]> theoLyDoHuy = thongKeAction.thongKeThietHaiTheoLyDo(dsPhieu);
+
+        view.updateThongKe(tongMatHang, tongSoLo, tongGiaTriTon, maxGia, minGia,
+                tongNhap, tongXuat, tongThietHai, soLoCanhBaoHSD, soHangSapHetTon,
+                theoNhom, theoLyDoHuy);
+    }
+
+    private class TimKiemListener implements ActionListener {
         @Override
-        public void actionPerformed(ActionEvent e) { // chạy khi bấm nút Tìm kiếm
-            String tuKhoa = view.getTuKhoa(); // lấy từ khoá người dùng nhập
-            String strTu = view.getGiaTuText().trim(); // lấy chuỗi giá bắt đầu
-            String strDen = view.getGiaDenText().trim(); // lấy chuỗi giá kết thúc
+        public void actionPerformed(ActionEvent e) {
+            String tuKhoa = view.getTuKhoa();
+            String strTu = view.getGiaTuText().trim();
+            String strDen = view.getGiaDenText().trim();
 
-            long giaTu = 0; // mặc định giá thấp nhất là 0 nếu bỏ trống
-            long giaDen = Long.MAX_VALUE; // mặc định giá cao nhất là vô cùng lớn nếu bỏ trống
-
-            try { // bắt lỗi nếu người dùng nhập sai định dạng số
-                if (!strTu.isEmpty()) { // nếu ô Giá từ có nhập dữ liệu
-                    giaTu = FormatUtils.parseMoney(strTu); // chuyển chuỗi tiền (ví dụ "10.000") thành số 10000
-                    if (giaTu < 0) { // kiểm tra số âm
-                        view.showMessage("Giá bắt đầu không được âm!");
-                        return;
-                    }
+            long giaTu = 0;
+            long giaDen = Long.MAX_VALUE;
+            try {
+                if (!strTu.isEmpty()) {
+                    giaTu = FormatUtils.parseMoney(strTu);
                 }
-                if (!strDen.isEmpty()) { // nếu ô Giá đến có nhập dữ liệu
-                    giaDen = FormatUtils.parseMoney(strDen); // chuyển chuỗi tiền thành số
-                    if (giaDen < 0) { // kiểm tra số âm
-                        view.showMessage("Giá kết thúc không được âm!");
-                        return;
-                    }
+                if (!strDen.isEmpty()) {
+                    giaDen = FormatUtils.parseMoney(strDen);
                 }
-                if (!strTu.isEmpty() && !strDen.isEmpty() && giaTu > giaDen) { // kiểm tra khoảng hợp lệ
+                if (!strTu.isEmpty() && !strDen.isEmpty() && giaTu > giaDen) {
                     view.showMessage("Khoảng giá không hợp lệ: 'Đơn giá từ' phải nhỏ hơn hoặc bằng 'Đến'!");
                     return;
                 }
-            } catch (NumberFormatException ex) { // bắt ngoại lệ nhập chữ thay vì số
+            } catch (NumberFormatException ex) {
                 view.showMessage("Vui lòng nhập khoảng đơn giá là số hợp lệ (ví dụ: 5000 hoặc 5.000)!");
                 return;
             }
 
-            List<HangHoa> dsHang = managerHangHoa.readListHangHoa(); // đọc danh sách hàng hoá mới nhất từ XML
-            List<HangHoa> ketQua = thongKeAction.timKiemKetHop(dsHang, tuKhoa, giaTu, giaDen); // lọc kết hợp từ khoá và khoảng giá
-            view.showListHangHoa(ketQua); // cập nhật bảng hiển thị kết quả tìm thấy
+            managerHangHoa.taiLai();
+            managerPhieu.taiLai();
+            ManagerLoHang qlLo = managerPhieu.getManagerLoHang();
+            List<HangHoa> ketQua = thongKeAction.timKiemKetHop(
+                    managerHangHoa.getList(), qlLo.getList(), tuKhoa, giaTu, giaDen);
+            danhSachDangHienThi = ketQua;
+            view.showListHangHoa(ketQua, qlLo);
 
-            if (ketQua.isEmpty()) { // nếu không tìm thấy mặt hàng nào
-                view.showMessage("Không tìm thấy mặt hàng nào phù hợp với điều kiện tìm kiếm!");
+            if (ketQua.isEmpty()) {
+                view.showMessage("Không tìm thấy mặt hàng nào phù hợp với điều kiện lọc!");
             }
         }
-    } // kết thúc lớp TimKiemListener
+    }
 
-    // Xử lý sự kiện khi bấm nút "Lọc hàng sắp/đã hết hạn"
-    private class CanhBaoListener implements ActionListener { // cài đặt ActionListener
+    private class CanhBaoListener implements ActionListener {
         @Override
-        public void actionPerformed(ActionEvent e) { // chạy khi bấm nút Lọc hết hạn
-            List<HangHoa> dsHang = managerHangHoa.readListHangHoa(); // đọc danh sách hàng hoá từ XML
-            List<HangHoa> dsCanhBao = thongKeAction.layDanhSachCanhBaoHetHan(dsHang, 30); // lọc hàng hết hạn trong 30 ngày
-            view.showListHangHoa(dsCanhBao); // hiển thị danh sách lên bảng
+        public void actionPerformed(ActionEvent e) {
+            managerHangHoa.taiLai();
+            managerPhieu.taiLai();
+            ManagerLoHang qlLo = managerPhieu.getManagerLoHang();
+            List<HangHoa> dsCanhBao = thongKeAction.layMatHangCoLoSapHetHan(
+                    managerHangHoa.getList(), qlLo.getList(), 30);
+            danhSachDangHienThi = dsCanhBao;
+            view.showListHangHoa(dsCanhBao, qlLo);
             if (dsCanhBao.isEmpty()) {
-                view.showMessage("Tuyệt vời! Không có mặt hàng nào hết hạn hoặc sắp hết hạn trong 30 ngày tới.");
+                view.showMessage("Không có mặt hàng nào có lô hết hạn hoặc sắp hết hạn trong 30 ngày tới.");
             } else {
-                view.showMessage("Có " + dsCanhBao.size() + " mặt hàng đã hết hạn (màu đỏ) hoặc sắp hết hạn trong 30 ngày tới!");
+                view.showMessage("Có " + dsCanhBao.size() + " mặt hàng có lô đã hết hạn hoặc sắp hết hạn trong 30 ngày!");
             }
         }
-    } // kết thúc lớp CanhBaoListener
+    }
 
-    // Xử lý sự kiện khi bấm nút "Hiển thị tất cả & Cập nhật"
-    private class LamMoiListener implements ActionListener { // cài đặt ActionListener
+    private class SapHetTonListener implements ActionListener {
         @Override
-        public void actionPerformed(ActionEvent e) { // chạy khi bấm nút Làm mới
-            view.clearSearchInputs(); // xoá trắng các ô nhập tìm kiếm
-            taiLaiDuLieuVaThongKe(); // nạp lại dữ liệu gốc và tính lại thống kê
+        public void actionPerformed(ActionEvent e) {
+            managerHangHoa.taiLai();
+            managerPhieu.taiLai();
+            ManagerLoHang qlLo = managerPhieu.getManagerLoHang();
+            List<HangHoa> dsSapHet = thongKeAction.layMatHangSapHetTon(managerHangHoa.getList(), qlLo);
+            danhSachDangHienThi = dsSapHet;
+            view.showListHangHoa(dsSapHet, qlLo);
+            if (dsSapHet.isEmpty()) {
+                view.showMessage("Tất cả mặt hàng đều đang có tồn khả dụng trên mức tối thiểu.");
+            } else {
+                view.showMessage("Có " + dsSapHet.size() + " mặt hàng chạm/dưới mức tồn tối thiểu, cần nhập thêm!");
+            }
         }
-    } // kết thúc lớp LamMoiListener
-} // kết thúc lớp ThongKeController
+    }
+
+    private class LamMoiListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            view.clearSearchInputs();
+            taiLaiDuLieuVaThongKe();
+        }
+    }
+
+    /** Tính năng nâng cao: Xuất báo cáo thống kê ra file HTML để in ấn (dữ liệu gốc vẫn lưu XML). */
+    private class XuatBaoCaoListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JFileChooser chooser = new JFileChooser(new File("."));
+            chooser.setDialogTitle("Xuất báo cáo thống kê kho hàng ra file HTML để in");
+            chooser.setFileFilter(new FileNameExtensionFilter("Báo cáo HTML (*.html)", "html"));
+            chooser.setSelectedFile(new File("BaoCaoKhoHangTapHoa.html"));
+            if (chooser.showSaveDialog(view) != JFileChooser.APPROVE_OPTION) {
+                return;
+            }
+            File f = chooser.getSelectedFile();
+            if (!f.getName().toLowerCase().endsWith(".html")) {
+                f = new File(f.getAbsolutePath() + ".html");
+            }
+
+            ManagerLoHang qlLo = managerPhieu.getManagerLoHang();
+            List<PhieuGiaoDich> dsPhieu = managerPhieu.getList();
+            List<HangHoa> dsXuat = danhSachDangHienThi != null ? danhSachDangHienThi : managerHangHoa.getList();
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("<!DOCTYPE html><html><head><meta charset='UTF-8'/><title>Báo cáo kho hàng tạp hoá</title>")
+              .append("<style>body{font-family:'Times New Roman',serif;margin:24px;}table{width:100%;border-collapse:collapse;margin-top:12px;}")
+              .append("th,td{border:1px solid #444;padding:6px;}th{background:#e6ecf5;}</style></head><body>")
+              .append("<h2 style='text-align:center;'>BÁO CÁO TỒN KHO & HOẠT ĐỘNG KHO HÀNG TẠP HOÁ</h2>")
+              .append("<p style='text-align:center;'>Ngày xuất báo cáo: ").append(FormatUtils.formatDateTime(new Date())).append("</p>")
+              .append("<ul>")
+              .append("<li><b>Tổng giá trị tồn kho hiện tại (giá vốn):</b> ")
+              .append(FormatUtils.formatMoney(thongKeAction.tinhTongGiaTriTonKho(qlLo.getList()))).append("</li>")
+              .append("<li><b>Tổng tiền nhập kho:</b> ").append(FormatUtils.formatMoney(thongKeAction.tinhTongTienNhap(dsPhieu)))
+              .append(" &nbsp;|&nbsp; <b>Tổng doanh thu xuất bán:</b> ").append(FormatUtils.formatMoney(thongKeAction.tinhTongDoanhThuXuat(dsPhieu)))
+              .append(" &nbsp;|&nbsp; <b>Tổng thiệt hại hàng hư hỏng/huỷ:</b> ").append(FormatUtils.formatMoney(thongKeAction.tinhTongThietHaiHuy(dsPhieu)))
+              .append("</li></ul>")
+              .append("<table><thead><tr><th>STT</th><th>Mã hàng</th><th>Tên hàng</th><th>Nhóm</th><th>ĐVT</th>")
+              .append("<th>Giá bán lẻ</th><th>Tồn khả dụng</th><th>HSD gần nhất</th></tr></thead><tbody>");
+
+            int stt = 1;
+            for (HangHoa h : dsXuat) {
+                Date hsd = qlLo.getHanSuDungGanNhat(h.getId());
+                sb.append("<tr><td align='center'>").append(stt++).append("</td>")
+                  .append("<td align='center'>").append(h.getMaHang()).append("</td>")
+                  .append("<td>").append(h.getTenHang()).append("</td>")
+                  .append("<td>").append(h.getNhomHang()).append("</td>")
+                  .append("<td align='center'>").append(h.getDonViTinh()).append("</td>")
+                  .append("<td align='right'>").append(FormatUtils.formatMoney(h.getDonGia())).append("</td>")
+                  .append("<td align='center'>").append(qlLo.tinhTonKhaDung(h.getId())).append("</td>")
+                  .append("<td align='center'>").append(hsd == null ? "—" : FormatUtils.formatDate(hsd)).append("</td></tr>");
+            }
+            sb.append("</tbody></table></body></html>");
+
+            try (Writer w = new OutputStreamWriter(new FileOutputStream(f), StandardCharsets.UTF_8)) {
+                w.write(sb.toString());
+                int mo = JOptionPane.showConfirmDialog(view,
+                        "Đã xuất báo cáo thành công tại:\n" + f.getAbsolutePath() + "\n\nMở file báo cáo ngay?",
+                        "Xuất báo cáo thành công", JOptionPane.YES_NO_OPTION);
+                if (mo == JOptionPane.YES_OPTION && Desktop.isDesktopSupported()) {
+                    Desktop.getDesktop().open(f);
+                }
+            } catch (Exception ex) {
+                view.showMessage("Lỗi khi xuất file báo cáo: " + ex.getMessage());
+            }
+        }
+    }
+}

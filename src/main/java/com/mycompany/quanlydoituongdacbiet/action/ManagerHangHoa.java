@@ -7,11 +7,18 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ManagerHangHoa {
+/**
+ * Lớp quản lý danh mục Hàng hoá (đọc/ghi hanghoa.xml) cài đặt chuẩn IQuanLy<HangHoa>.
+ */
+public class ManagerHangHoa implements IQuanLy<HangHoa> {
     private static final String HANGHOA_FILE_NAME = "hanghoa.xml";
     private List<HangHoa> listHangHoa;
 
     public ManagerHangHoa() {
+        taiLai();
+    }
+
+    public final void taiLai() {
         this.listHangHoa = readListHangHoa();
         if (this.listHangHoa == null) {
             this.listHangHoa = new ArrayList<>();
@@ -48,38 +55,56 @@ public class ManagerHangHoa {
         return maxId + 1;
     }
 
-    // Kiểm tra dữ liệu và trả về null nếu hợp lệ, ngược lại trả về thông báo lỗi
-    private String validateHangHoa(HangHoa h) {
+    /** Kiểm tra dữ liệu hợp lệ; trả về null nếu đúng, ngược lại trả về thông báo lỗi. */
+    public String validateHangHoa(HangHoa h) {
         if (h.getMaHang() == null || h.getMaHang().trim().isEmpty()) {
             return "Mã hàng không được để trống.";
         }
         if (h.getTenHang() == null || h.getTenHang().trim().isEmpty()) {
             return "Tên hàng không được để trống.";
         }
+        if (h.getDonViTinh() == null || h.getDonViTinh().trim().isEmpty()) {
+            return "Đơn vị tính không được để trống.";
+        }
+        if (h.getDonGia() <= 0) {
+            return "Giá bán niêm yết phải lớn hơn 0.";
+        }
+        if (h.getTonToiThieu() < 0) {
+            return "Định mức tồn tối thiểu không được âm.";
+        }
+        String ma = h.getMaHang().trim();
         for (HangHoa item : listHangHoa) {
-            if (item.getId() != h.getId() && item.getMaHang().equalsIgnoreCase(h.getMaHang().trim())) {
-                return "Mã hàng '" + h.getMaHang() + "' đã tồn tại.";
+            if (item.getId() != h.getId() && item.getMaHang() != null
+                    && item.getMaHang().trim().equalsIgnoreCase(ma)) {
+                return "Mã hàng '" + ma + "' đã tồn tại (" + item.getTenHang()
+                        + ").\nLưu ý: Nếu nhập thêm mặt hàng này từ nhà cung cấp khác, hãy sang mục Lập Phiếu Nhập Kho!";
             }
         }
         return null;
     }
 
-    public String add(HangHoa obj) {
+    public String themHangHoa(HangHoa obj) {
         String error = validateHangHoa(obj);
         if (error != null) {
             return error;
         }
+        obj.setMaHang(obj.getMaHang().trim());
+        obj.setTenHang(obj.getTenHang().trim());
+        obj.setDonViTinh(obj.getDonViTinh().trim());
         obj.setId(getNextId());
         listHangHoa.add(obj);
         writeListHangHoa(listHangHoa);
         return null;
     }
 
-    public String edit(HangHoa obj) {
+    public String suaHangHoa(HangHoa obj) {
         String error = validateHangHoa(obj);
         if (error != null) {
             return error;
         }
+        obj.setMaHang(obj.getMaHang().trim());
+        obj.setTenHang(obj.getTenHang().trim());
+        obj.setDonViTinh(obj.getDonViTinh().trim());
         for (int i = 0; i < listHangHoa.size(); i++) {
             if (listHangHoa.get(i).getId() == obj.getId()) {
                 listHangHoa.set(i, obj);
@@ -87,31 +112,61 @@ public class ManagerHangHoa {
                 return null;
             }
         }
-        return "Không tìm thấy hàng hóa cần sửa.";
+        return "Không tìm thấy hàng hoá cần sửa.";
     }
 
-    public boolean delete(HangHoa obj) {
-        for (int i = 0; i < listHangHoa.size(); i++) {
-            if (listHangHoa.get(i).getId() == obj.getId()) {
-                listHangHoa.remove(i);
-                writeListHangHoa(listHangHoa);
-                return true;
-            }
+    /** Kiểm tra ràng buộc lô hàng trước khi xoá danh mục mặt hàng. */
+    public String xoaHangHoa(int id) {
+        ManagerLoHang qlLo = new ManagerLoHang();
+        if (qlLo.coLoCuaHang(id)) {
+            return "Không thể xoá mặt hàng này vì đang có lô hàng / lịch sử nhập kho liên kết!\n"
+                    + "Vui lòng xoá các phiếu giao dịch của mặt hàng này trước.";
         }
-        return false;
-    }
-
-    public boolean delete(int id) {
         for (int i = 0; i < listHangHoa.size(); i++) {
             if (listHangHoa.get(i).getId() == id) {
                 listHangHoa.remove(i);
                 writeListHangHoa(listHangHoa);
-                return true;
+                return null;
             }
         }
-        return false;
+        return "Không tìm thấy hàng hoá cần xoá.";
     }
 
+    public HangHoa findById(int id) {
+        for (HangHoa hh : listHangHoa) {
+            if (hh.getId() == id) {
+                return hh;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void add(HangHoa obj) {
+        String err = themHangHoa(obj);
+        if (err != null) {
+            throw new IllegalArgumentException(err);
+        }
+    }
+
+    @Override
+    public void edit(HangHoa obj) {
+        String err = suaHangHoa(obj);
+        if (err != null) {
+            throw new IllegalArgumentException(err);
+        }
+    }
+
+    @Override
+    public boolean delete(HangHoa obj) {
+        return obj != null && xoaHangHoa(obj.getId()) == null;
+    }
+
+    public boolean delete(int id) {
+        return xoaHangHoa(id) == null;
+    }
+
+    @Override
     public List<HangHoa> getList() {
         return listHangHoa;
     }

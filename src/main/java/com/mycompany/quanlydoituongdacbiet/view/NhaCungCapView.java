@@ -24,7 +24,7 @@ public class NhaCungCapView extends JFrame {
 
     private void initComponents() {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Quản Lý Nhà Cung Cấp - Đề 13");
+        setTitle("Quản Lý Nhà Cung Cấp - Đề tài 13");
 
         idLabel = new JLabel("ID:");
         tenLabel = new JLabel("Tên NCC (*):");
@@ -49,73 +49,98 @@ public class NhaCungCapView extends JFrame {
 
         jScrollPaneTable = new JScrollPane();
         nccTable = new JTable();
-        nccTable.setModel(new DefaultTableModel(new Object[][]{}, columnNames));
+        nccTable.setModel(taoModel(new Object[][]{}));
+        nccTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        nccTable.setAutoCreateRowSorter(true);
+        nccTable.setRowHeight(24);
         jScrollPaneTable.setViewportView(nccTable);
-        jScrollPaneTable.setPreferredSize(new Dimension(540, 310));
+        jScrollPaneTable.setPreferredSize(new Dimension(560, 310));
 
         SpringLayout layout = new SpringLayout();
         JPanel panel = new JPanel();
         panel.setLayout(layout);
 
         panel.add(jScrollPaneTable);
-        panel.add(idLabel); panel.add(idField);
-        panel.add(tenLabel); panel.add(tenField);
-        panel.add(sdtLabel); panel.add(sdtField);
-        panel.add(diaChiLabel); panel.add(diaChiField);
-        panel.add(emailLabel); panel.add(emailField);
-        panel.add(addBtn); panel.add(editBtn); panel.add(deleteBtn); panel.add(clearBtn);
-        panel.add(searchLabel); panel.add(searchField); panel.add(searchBtn);
+        panel.add(addBtn);
+        panel.add(editBtn);
+        panel.add(deleteBtn);
+        panel.add(clearBtn);
+        panel.add(idLabel);
+        panel.add(tenLabel);
+        panel.add(sdtLabel);
+        panel.add(diaChiLabel);
+        panel.add(emailLabel);
+        panel.add(idField);
+        panel.add(tenField);
+        panel.add(sdtField);
+        panel.add(diaChiField);
+        panel.add(emailField);
+        panel.add(searchLabel);
+        panel.add(searchField);
+        panel.add(searchBtn);
 
-        layout.putConstraint(SpringLayout.WEST, idLabel, 20, SpringLayout.WEST, panel);
+        layout.putConstraint(SpringLayout.WEST, idLabel, 15, SpringLayout.WEST, panel);
         layout.putConstraint(SpringLayout.NORTH, idLabel, 20, SpringLayout.NORTH, panel);
-        layout.putConstraint(SpringLayout.WEST, idField, 110, SpringLayout.WEST, panel);
-        layout.putConstraint(SpringLayout.NORTH, idField, 20, SpringLayout.NORTH, panel);
-
-        layout.putConstraint(SpringLayout.WEST, tenLabel, 20, SpringLayout.WEST, panel);
+        layout.putConstraint(SpringLayout.WEST, tenLabel, 15, SpringLayout.WEST, panel);
         layout.putConstraint(SpringLayout.NORTH, tenLabel, 55, SpringLayout.NORTH, panel);
-        layout.putConstraint(SpringLayout.WEST, tenField, 110, SpringLayout.WEST, panel);
-        layout.putConstraint(SpringLayout.NORTH, tenField, 55, SpringLayout.NORTH, panel);
-
-        layout.putConstraint(SpringLayout.WEST, sdtLabel, 20, SpringLayout.WEST, panel);
+        layout.putConstraint(SpringLayout.WEST, sdtLabel, 15, SpringLayout.WEST, panel);
         layout.putConstraint(SpringLayout.NORTH, sdtLabel, 90, SpringLayout.NORTH, panel);
-        layout.putConstraint(SpringLayout.WEST, sdtField, 110, SpringLayout.WEST, panel);
-        layout.putConstraint(SpringLayout.NORTH, sdtField, 90, SpringLayout.NORTH, panel);
-
-        layout.putConstraint(SpringLayout.WEST, diaChiLabel, 20, SpringLayout.WEST, panel);
+        layout.putConstraint(SpringLayout.WEST, diaChiLabel, 15, SpringLayout.WEST, panel);
         layout.putConstraint(SpringLayout.NORTH, diaChiLabel, 125, SpringLayout.NORTH, panel);
-        layout.putConstraint(SpringLayout.WEST, diaChiField, 110, SpringLayout.WEST, panel);
-        layout.putConstraint(SpringLayout.NORTH, diaChiField, 125, SpringLayout.NORTH, panel);
-
-        layout.putConstraint(SpringLayout.WEST, emailLabel, 20, SpringLayout.WEST, panel);
+        layout.putConstraint(SpringLayout.WEST, emailLabel, 15, SpringLayout.WEST, panel);
         layout.putConstraint(SpringLayout.NORTH, emailLabel, 160, SpringLayout.NORTH, panel);
-        layout.putConstraint(SpringLayout.WEST, emailField, 110, SpringLayout.WEST, panel);
-        layout.putConstraint(SpringLayout.NORTH, emailField, 160, SpringLayout.NORTH, panel);
 
-        layout.putConstraint(SpringLayout.WEST, addBtn, 20, SpringLayout.WEST, panel);
-        layout.putConstraint(SpringLayout.NORTH, addBtn, 215, SpringLayout.NORTH, panel);
-        layout.putConstraint(SpringLayout.WEST, editBtn, 95, SpringLayout.WEST, panel);
-        layout.putConstraint(SpringLayout.NORTH, editBtn, 215, SpringLayout.NORTH, panel);
-        layout.putConstraint(SpringLayout.WEST, deleteBtn, 165, SpringLayout.WEST, panel);
-        layout.putConstraint(SpringLayout.NORTH, deleteBtn, 215, SpringLayout.NORTH, panel);
-        layout.putConstraint(SpringLayout.WEST, clearBtn, 235, SpringLayout.WEST, panel);
-        layout.putConstraint(SpringLayout.NORTH, clearBtn, 215, SpringLayout.NORTH, panel);
+        layout.putConstraint(SpringLayout.WEST, idField, 105, SpringLayout.WEST, panel);
+        layout.putConstraint(SpringLayout.NORTH, idField, 17, SpringLayout.NORTH, panel);
+        layout.putConstraint(SpringLayout.WEST, tenField, 105, SpringLayout.WEST, panel);
+        layout.putConstraint(SpringLayout.NORTH, tenField, 52, SpringLayout.NORTH, panel);
+        layout.putConstraint(SpringLayout.WEST, sdtField, 105, SpringLayout.WEST, panel);
+        layout.putConstraint(SpringLayout.NORTH, sdtField, 87, SpringLayout.NORTH, panel);
+        layout.putConstraint(SpringLayout.WEST, diaChiField, 105, SpringLayout.WEST, panel);
+        layout.putConstraint(SpringLayout.NORTH, diaChiField, 122, SpringLayout.NORTH, panel);
+        layout.putConstraint(SpringLayout.WEST, emailField, 105, SpringLayout.WEST, panel);
+        layout.putConstraint(SpringLayout.NORTH, emailField, 157, SpringLayout.NORTH, panel);
 
-        layout.putConstraint(SpringLayout.WEST, searchLabel, 340, SpringLayout.WEST, panel);
-        layout.putConstraint(SpringLayout.NORTH, searchLabel, 23, SpringLayout.NORTH, panel);
-        layout.putConstraint(SpringLayout.WEST, searchField, 410, SpringLayout.WEST, panel);
-        layout.putConstraint(SpringLayout.NORTH, searchField, 20, SpringLayout.NORTH, panel);
-        layout.putConstraint(SpringLayout.WEST, searchBtn, 645, SpringLayout.WEST, panel);
-        layout.putConstraint(SpringLayout.NORTH, searchBtn, 19, SpringLayout.NORTH, panel);
+        layout.putConstraint(SpringLayout.WEST, addBtn, 15, SpringLayout.WEST, panel);
+        layout.putConstraint(SpringLayout.NORTH, addBtn, 210, SpringLayout.NORTH, panel);
+        layout.putConstraint(SpringLayout.WEST, editBtn, 85, SpringLayout.WEST, panel);
+        layout.putConstraint(SpringLayout.NORTH, editBtn, 210, SpringLayout.NORTH, panel);
+        layout.putConstraint(SpringLayout.WEST, deleteBtn, 150, SpringLayout.WEST, panel);
+        layout.putConstraint(SpringLayout.NORTH, deleteBtn, 210, SpringLayout.NORTH, panel);
+        layout.putConstraint(SpringLayout.WEST, clearBtn, 215, SpringLayout.WEST, panel);
+        layout.putConstraint(SpringLayout.NORTH, clearBtn, 210, SpringLayout.NORTH, panel);
 
-        layout.putConstraint(SpringLayout.WEST, jScrollPaneTable, 340, SpringLayout.WEST, panel);
-        layout.putConstraint(SpringLayout.NORTH, jScrollPaneTable, 55, SpringLayout.NORTH, panel);
+        layout.putConstraint(SpringLayout.WEST, searchLabel, 330, SpringLayout.WEST, panel);
+        layout.putConstraint(SpringLayout.NORTH, searchLabel, 20, SpringLayout.NORTH, panel);
+        layout.putConstraint(SpringLayout.WEST, searchField, 400, SpringLayout.WEST, panel);
+        layout.putConstraint(SpringLayout.NORTH, searchField, 17, SpringLayout.NORTH, panel);
+        layout.putConstraint(SpringLayout.WEST, searchBtn, 635, SpringLayout.WEST, panel);
+        layout.putConstraint(SpringLayout.NORTH, searchBtn, 15, SpringLayout.NORTH, panel);
+
+        layout.putConstraint(SpringLayout.WEST, jScrollPaneTable, 330, SpringLayout.WEST, panel);
+        layout.putConstraint(SpringLayout.NORTH, jScrollPaneTable, 50, SpringLayout.NORTH, panel);
+
+        this.add(panel);
+        this.setSize(930, 430);
+        this.setLocationRelativeTo(null);
 
         editBtn.setEnabled(false);
         deleteBtn.setEnabled(false);
+        addBtn.setEnabled(true);
+    }
 
-        this.add(panel);
-        this.setSize(910, 420);
-        this.setLocationRelativeTo(null);
+    private DefaultTableModel taoModel(Object[][] data) {
+        return new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                return columnIndex == 0 ? Integer.class : String.class;
+            }
+        };
     }
 
     public void showMessage(String message) {
@@ -136,12 +161,13 @@ public class NhaCungCapView extends JFrame {
             data[i][3] = list.get(i).getDiaChi();
             data[i][4] = list.get(i).getEmail();
         }
-        nccTable.setModel(new DefaultTableModel(data, columnNames));
+        nccTable.setModel(taoModel(data));
     }
 
     public void fillNCCFromSelectedRow() {
-        int row = nccTable.getSelectedRow();
-        if (row >= 0) {
+        int viewRow = nccTable.getSelectedRow();
+        if (viewRow >= 0) {
+            int row = nccTable.convertRowIndexToModel(viewRow);
             idField.setText(nccTable.getModel().getValueAt(row, 0).toString());
             tenField.setText(nccTable.getModel().getValueAt(row, 1).toString());
             sdtField.setText(nccTable.getModel().getValueAt(row, 2).toString());
@@ -193,7 +219,7 @@ public class NhaCungCapView extends JFrame {
             showMessage("Số điện thoại phải gồm 10 chữ số và bắt đầu bằng số 0!");
             return null;
         }
-        if (!email.isEmpty() && !email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+        if (!email.isEmpty() && !email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,6}$")) {
             showMessage("Định dạng Email không hợp lệ!");
             return null;
         }
@@ -217,7 +243,10 @@ public class NhaCungCapView extends JFrame {
     public void addEditNCCListener(ActionListener listener) { editBtn.addActionListener(listener); }
     public void addDeleteNCCListener(ActionListener listener) { deleteBtn.addActionListener(listener); }
     public void addClearListener(ActionListener listener) { clearBtn.addActionListener(listener); }
-    public void addSearchListener(ActionListener listener) { searchBtn.addActionListener(listener); }
+    public void addSearchListener(ActionListener listener) {
+        searchBtn.addActionListener(listener);
+        searchField.addActionListener(listener);
+    }
     public void addListNCCSelectionListener(ListSelectionListener listener) {
         nccTable.getSelectionModel().addListSelectionListener(listener);
     }

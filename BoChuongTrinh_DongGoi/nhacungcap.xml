@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<NhaCungCaps>
+    <NhaCungCap>
+        <id>1</id>
+        <tenNCC>Công Ty Hữu Hạn Thành Long</tenNCC>
+        <soDienThoai>0814765298</soDienThoai>
+        <diaChi>Số 88 Nguyễn Chí Thanh, Đống Đa, Hà Nội</diaChi>
+        <email>thanhlong.npp@gmail.com</email>
+    </NhaCungCap>
+    <NhaCungCap>
+        <id>2</id>
+        <tenNCC>Nhà Phân Phối Minh Tâm</tenNCC>
+        <soDienThoai>0903456789</soDienThoai>
+        <diaChi>KCN Quang Minh, Mê Linh, Hà Nội</diaChi>
+        <email>minhtam.food@gmail.com</email>
+    </NhaCungCap>
+    <NhaCungCap>
+        <id>3</id>
+        <tenNCC>Đại Lý Thực Phẩm An Phát</tenNCC>
+        <soDienThoai>0978112233</soDienThoai>
+        <diaChi>Số 15 Quang Trung, Hà Đông, Hà Nội</diaChi>
+        <email>anphat.taphoa@gmail.com</email>
+    </NhaCungCap>
+</NhaCungCaps>

@@ -39,6 +39,13 @@ public class LoginView extends javax.swing.JFrame
      */
     public LoginView() {
         initComponents();
+        setTitle("Đăng nhập - Quản lý kho hàng cửa hàng tạp hoá");
+        jLabel4.setIcon(com.mycompany.quanlydoituongdacbiet.utils.FileUtils.loadViewImage("male.png"));
+        jLabel5.setIcon(com.mycompany.quanlydoituongdacbiet.utils.FileUtils.loadViewImage("lock.png"));
+        jLabel8.setIcon(com.mycompany.quanlydoituongdacbiet.utils.FileUtils.loadViewImage("neon.png"));
+        jPanel2.setBackground(new java.awt.Color(25, 35, 70));
+        jPanel2.setOpaque(true);
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -326,7 +333,7 @@ public class LoginView extends javax.swing.JFrame
     }
     public void addLoginListener(ActionListener listener) {
         btnLogin.addActionListener(listener);
-        
-
+        passwordField.addActionListener(listener);
+        userNameField.addActionListener(e -> passwordField.requestFocusInWindow());
     }
 }
